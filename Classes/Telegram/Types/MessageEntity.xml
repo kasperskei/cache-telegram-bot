@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:03:15">
+<Class name="Telegram.Types.MessageEntity">
+<Super>BaseType</Super>
+<TimeChanged>64144,64484.527219</TimeChanged>
+<TimeCreated>64130,63199.943102</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="offset">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="length">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="url">
+<Type>%String</Type>
+</Property>
+
+<Property name="user">
+<Type>Telegram.Types.User</Type>
+</Property>
+</Class>
+</Export>

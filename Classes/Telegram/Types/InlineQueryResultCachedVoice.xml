@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.InlineQueryResultCachedVoice">
+<Description>
+Represents a link to a voice message stored on the Telegram servers. By default, this voice message will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the voice message.</Description>
+<Super>BaseType</Super>
+<TimeCreated>64149,84298.814282</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="voice_file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="reply_markup">
+<Type>InlineKeyboardMarkup</Type>
+</Property>
+
+<Property name="input_message_content">
+<Type>%Object</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.PhotoSize">
+<Super>BaseType</Super>
+<TimeCreated>64130,63200.132439</TimeCreated>
+
+<Property name="file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="width">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="height">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="file_size">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

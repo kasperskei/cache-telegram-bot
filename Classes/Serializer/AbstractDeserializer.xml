@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Serializer.AbstractDeserializer">
+<IncludeCode>Src.Utils.Macro</IncludeCode>
+<Super>%RegisteredObject</Super>
+<TimeCreated>64127,64782.375164</TimeCreated>
+
+<Method name="InternalDeserialize">
+<Abstract>1</Abstract>
+<FormalSpec>stream:%Stream.Object,classname:%String</FormalSpec>
+</Method>
+
+<Method name="Deserialize">
+<FormalSpec>source,className:%String="Serializer.Serializable.Object"</FormalSpec>
+<Implementation><![CDATA[
+	if ('$isobject(source)){
+		set iStream = ##class(%Stream.TmpBinary).%New()
+		$$$do(iStream.Write(source))
+		$$$do(iStream.Rewind())
+	}
+	elseif(source.%IsA("%Stream.Object")){
+		set iStream = source
+	}
+	else{
+		$$$throw("'source' must be string or stream, '"_source_"' found")
+	}
+	return ..InternalDeserialize(iStream, className)
+]]></Implementation>
+</Method>
+</Class>
+</Export>

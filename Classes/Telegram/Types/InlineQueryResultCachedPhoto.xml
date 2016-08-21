@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:01:07">
+<Class name="Telegram.Types.InlineQueryResultCachedPhoto">
+<Description>
+Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.</Description>
+<Super>BaseType</Super>
+<TimeChanged>64150,6835.538379</TimeChanged>
+<TimeCreated>64149,84211.663985</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="photo_file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+</Property>
+
+<Property name="description">
+<Type>%String</Type>
+</Property>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>InlineKeyboardMarkup</Type>
+</Property>
+
+<Property name="input_message_content">
+<Type>%Object</Type>
+</Property>
+</Class>
+</Export>

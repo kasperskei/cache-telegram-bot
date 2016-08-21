@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:37">
+<Class name="Serializer.TomlParser">
+<Description><![CDATA[
+<h1>TOML parser</h1>
+<p>Since TOML has no formal description or standart,
+I ported TOML decoding/encoding 
+<a href=https://github.com/alexcrichton/toml-rs>library for Rust</a>.</p>]]></Description>
+<Super>%RegisteredObject</Super>
+<TimeChanged>64132,42263</TimeChanged>
+<TimeCreated>63623,75447.929822</TimeCreated>
+
+<Property name="stream">
+<Type>%Stream.Object</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="buffer">
+<Type>%String</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="Errors">
+<MultiDimensional>1</MultiDimensional>
+</Property>
+
+<Property name="row">
+<Type>%Integer</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="col">
+<Type>%Integer</Type>
+<Private>1</Private>
+</Property>
+
+<Method name="ParseFile">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[filename:%String,&errors]]></FormalSpec>
+<ReturnType>Serializer.Serializable.Object</ReturnType>
+<Implementation><![CDATA[
+	set file = ##class(%Stream.FileCharacter).%New()
+	set file.Filename = filename
+	set parser = ..%New(file)
+	set ret = parser.Parse()
+	merge errors = parser.Errors
+	return ret
+]]></Implementation>
+</Method>
+
+<Method name="%OnNew">
+<FormalSpec>stream:%Stream.Object</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	set ..stream = stream
+	set ..buffer = ""
+	set ..Errors = 0
+	set ..row = 1
+	set ..col = 1
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="peek">
+<Description>
+Peeks ahead `n` characters</Description>
+<FormalSpec>n:%Integer</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set need = n-$l(..buffer)
+	if (need>0) {
+		if (..stream.AtEnd) return ""
+		set ..buffer=..buffer_..stream.Read(need)
+	}
+	return $e(..buffer,n)
+]]></Implementation>
+</Method>
+
+<Method name="next">
+<Description>
+Returns first character nd consumes it</Description>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set ch = ..peek(1)
+	if (ch = $c(10)){
+		set ..row = ..row + 1
+		set ..col = 1
+	}
+	else{
+		set ..col = ..col + 1
+	}
+	set ..buffer = $e(..buffer, 2, *)
+	return ch
+]]></Implementation>
+</Method>
+
+<Method name="eat">
+<Description>
+Returns true and consumes the next character if it matches `ch`,
+otherwise do nothing and return false</Description>
+<FormalSpec>ch:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..peek(1) = ch){
+		do ..next()
+		return $$$YES
+	}
+	return $$$NO
+]]></Implementation>
+</Method>
+
+<Method name="expect">
+<FormalSpec>ch:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..eat(ch)) return $$$YES
+	set c = ..peek(1)
+	do ..pushError("expected '"_ch_"', but found '"_$s(c="":"eof", 1:c)_"'")
+	return $$$NO
+]]></Implementation>
+</Method>
+
+<Method name="ws">
+<Description>
+Consumes whitespace ('\t' and ' ') until another character (or EOF) is
+reached. Returns if any whitespace was consumed</Description>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set ret = $$$NO
+	for	{
+		if (..eat($c(9)) || ..eat(" ")){
+			set ret = $$$YES
+		}
+		else {
+			quit
+		}
+	}
+	return ret
+]]></Implementation>
+</Method>
+
+<Method name="comment">
+<Description>
+Consumes the rest of the line after a comment character</Description>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if ('..eat("#")) return $$$NO
+	while(('..eat($c(10))) && ('..eat(""))) {
+		do ..next()
+	}
+	return $$$YES
+]]></Implementation>
+</Method>
+
+<Method name="newLine">
+<Description>
+Consumes a newline if one is next</Description>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..eat($c(10))){
+		return $$$YES
+	}
+	if ((..peek(1)=$c(13)) && (..peek(2)=$c(10))){
+		do ..next()
+		do ..next()
+		return $$$YES
+	}
+	return $$$NO
+]]></Implementation>
+</Method>
+
+<Method name="pushError">
+<FormalSpec>text:%String</FormalSpec>
+<Implementation><![CDATA[
+	set ..Errors($i(..Errors), "text") = text
+	set ..Errors(..Errors, "row") = ..row
+	set ..Errors(..Errors, "col") = ..col
+]]></Implementation>
+</Method>
+
+<Method name="Parse">
+<Description>
+Executes the parser, parsing the stream contained within.
+
+This function returns object if parsing is
+successful, or it will return 0 if any parse error or invalid TOML
+error occurs.
+
+If an error occurs, the `Errors` field of this parser can be consulted
+to determine the cause of the parse failure.</Description>
+<ReturnType>Serializer.Serializable.Object</ReturnType>
+<Implementation><![CDATA[
+	set ret = ##class(Serializer.Serializable.Object).%New()
+	while (..peek(1)'=""){
+		do ..ws()
+		if (..newLine()) continue
+		if (..comment()) continue
+		if (..eat("[")){
+			set array = ..eat("[")
+			set keys = ##class(%ListOfDataTypes).%New()
+			for {
+				do ..ws()
+				if (..keyName(.key)) do keys.Insert(key)
+				do ..ws()
+				if ..eat("]"){
+					if (array && '..expect("]")) return ""
+					quit
+				}
+				if '..expect(".") return ""
+			}
+			if (keys.Count()=0) return ""
+			
+			set table = ##class(Serializer.Serializable.Object).%New()
+			if ('..values(table)) return ""
+			if (array) {
+				do ..insertArray(ret, keys, table)
+			}
+			else {
+				do ..insertTable(ret, keys, table)
+			}
+		}
+		else {
+			if ('..values(ret)) return ""
+		}
+	}
+	if (..Errors>0){
+		return ""
+	}
+	else {
+		return ret
+	}
+]]></Implementation>
+</Method>
+
+<Method name="keyName">
+<Description>
+Parse a single key name</Description>
+<FormalSpec><![CDATA[&key:%String]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..eat("""")) {
+		if ('..finishString($$$NO, .key)) return $$$NO
+	}
+	else {
+		set key=""
+		while (..isValidInKey(..peek(1))){
+			set key=key_..next()
+		}
+	}
+	if (key=""){
+		do ..pushError("expected a key but found an empty string")
+		return $$$NO
+	}
+	return $$$YES
+]]></Implementation>
+</Method>
+
+<Method name="values">
+<Description>
+Parses the values into the given TomlTable. Returns true in case of success
+and false in case of error.</Description>
+<FormalSpec>table:Serializer.Serializable.Object</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	for {
+		do ..ws()
+		if (..newLine()) continue
+		if (..comment()) continue
+		if ((..peek(1)="[") || (..peek(1)="")) quit
+		if ('..keyName(.key)) return $$$NO
+		if ('..keyvalSep()) return $$$NO
+		if ('..value(.value)) return $$$NO
+		do ..insert(table, key, value)
+		do ..ws()
+		do ..comment()
+		do ..newLine()
+	}
+	return $$$YES
+]]></Implementation>
+</Method>
+
+<Method name="keyvalSep">
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+    do ..ws()
+    if ('..expect("=")) return $$$NO
+    do ..ws()
+    return $$$YES
+]]></Implementation>
+</Method>
+
+<Method name="value">
+<Description>
+Parses a value</Description>
+<FormalSpec><![CDATA[&val]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	do ..ws()
+	set ch = ..peek(1)
+	if (ch = """") return ..string(.val)
+	if (ch = "'") return ..literalString(.val)
+	if ((ch = "t") || (ch = "f")) return ..boolean(.val)
+	if (ch = "[") return ..array(.val)
+	if (ch = "{") return ..inlineTable(.val)
+	if ((ch = "-") || (ch = "+")) return ..number(.val)
+	if (..isDigit(ch)) return ..numberOrDatetime(.val)
+	do ..pushError("expected a value")
+	return $$$NO
+]]></Implementation>
+</Method>
+
+<Method name="string">
+<Description>
+Parses a single or multi-line string</Description>
+<FormalSpec><![CDATA[&val:%String]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if ('..expect("""")) return $$$NO
+	set multiline = $$$NO
+	if (..eat("""")){
+		if (..eat("""")){
+			set multiline = $$$YES
+			do ..newLine()
+		}
+		else
+		{
+			set val = ""
+			return $$$YES
+		}
+	}
+	return ..finishString(multiline, .val)
+]]></Implementation>
+</Method>
+
+<Method name="finishString">
+<Description>
+Finish parsing a basic string after the opening quote has been seen</Description>
+<FormalSpec><![CDATA[multiline:%Boolean,&val:%String]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set val = ""
+	for {
+		while (multiline && ..newLine()) {
+			set val = val_$c(13,10)
+		}
+		set ch = ..next()
+		if (ch = """"){
+			if (multiline){
+				if ('..eat("""")) {
+					set val = val_""""
+					continue
+				}
+				if ('..eat("""")) {
+					set val = val_""""""
+					continue
+				}
+			}
+			return $$$YES
+		}
+		elseif (ch = "\"){
+			if (..escape(multiline, .insertedCh)) set val = val_insertedCh
+		}
+		elseif (ch = ""){
+			do ..pushError("unterminated string literal")
+			return $$$NO
+		}
+		elseif ($a(ch) < 32) {
+			do ..pushError("control character must be escaped")
+		}
+		else {
+			set val=val_ch
+		}
+	}
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// doesn't support Unicode (\u0000 and \U00000000)
+
+]]></Content>
+</UDLText>
+
+<Method name="escape">
+<FormalSpec><![CDATA[multiline:%Boolean,&val:%String]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (multiline && ..newLine()){
+		while(..ws() || ..newLine()) {}
+		return $$$NO
+	}
+	set ch = ..next()
+	if (ch = "b") {
+		set val = $c(8)
+		return $$$YES
+	}
+	if (ch = "t") {
+		set val = $c(9)
+		return $$$YES
+	}
+	if (ch = "n") {
+		set val = $c(10)
+		return $$$YES
+	}
+	if (ch = "f") {
+		set val = $c(12)
+		return $$$YES
+	}
+	if (ch = "r") {
+		set val = $c(13)
+		return $$$YES
+	}
+	if (ch = """") {
+		set val = $c(34)
+		return $$$YES
+	}
+	if (ch = "\") {
+		set val = $c(92)
+		return $$$YES
+	}
+	if (ch = ""){
+		do ..pushError("unterminated escape sequence")
+		return $$$NO
+	}
+	else{
+		do ..pushError("unknown string escape: '"_ch_"'")
+		return $$$NO
+	}
+]]></Implementation>
+</Method>
+
+<Method name="literalString">
+<FormalSpec><![CDATA[&val:%String]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if ('..expect("'")) return $$$NO
+	set multiline = $$$NO
+	set val = ""
+	if (..eat("'")){
+		if (..eat("'")){
+			set multiline = $$$YES
+			do ..newLine()
+		}
+		else
+		{
+			return $$$YES
+		}
+	}
+	for {
+		if ('multiline && ..newLine()){
+			do ..pushError("literal strings cannot contain newlines")
+			return $$$NO
+		}
+		
+		set ch = ..next()
+		if (ch = "'"){
+			if (multiline){
+				if ('..eat("'")) {
+					set val = val_"'"
+					continue
+				}
+				if ('..eat("'")) {
+					set val = val_"''"
+					continue
+				}
+			}
+			return $$$YES
+		}
+		elseif (ch = ""){
+			do ..pushError("unterminated string literal")
+			return $$$NO
+		}
+		else {
+			set val=val_ch
+		}
+	}
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// method from Rust can't work here - we can't go back in the stream
+
+]]></Content>
+</UDLText>
+
+<Method name="numberOrDatetime">
+<FormalSpec><![CDATA[&val]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	for i=1:1{
+		set ch = ..peek(i)
+		if ('..isDigit(ch)){
+			if (ch = "-") return ..datetime(.val)
+			return ..number(.val)
+		}
+	}
+]]></Implementation>
+</Method>
+
+<Method name="number">
+<FormalSpec><![CDATA[&val]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if ('..integer($$$NO, $$$YES, .prefix)) return $$$NO
+	set strVal = prefix
+	if (..eat(".")){
+		set strVal = strVal_"."
+		if ('..integer($$$YES, $$$NO, .decimal)) return $$$NO
+		set strVal = strVal_decimal
+	}
+	if (..eat("e") || ..eat("E")){
+		set strVal = strVal_"e"
+		if ('..integer($$$NO, $$$YES, .exponent)) return $$$NO
+		set strVal = strVal_exponent
+	}
+	set val = +strVal
+	return $$$YES
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Returns 'val' as string because of leading zeroes (for '02' in 5.02e+3)
+
+]]></Content>
+</UDLText>
+
+<Method name="integer">
+<FormalSpec><![CDATA[allowLeadingZeroes:%Boolean,allowSign:%Boolean,&val:%String]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set val = ""
+	if (allowSign){
+		if (..eat("-")){
+			set val = "-"
+		}
+		else {
+			do ..eat("+")
+		}
+	}
+	if ((..peek(1) = "0") && 'allowLeadingZeroes){
+		do ..pushError("leading zeroes are not allowed")
+		return $$$NO
+	}
+	if ('..isDigit(..peek(1))){
+		do ..pushError("expected start of a numeric literal")
+		return $$$NO
+	}
+	set underscore = $$$NO
+	for{
+		set ch = ..peek(1)
+		if (..isDigit(ch)){
+			set val = val_ch
+			set underscore = $$$NO
+		}
+		elseif (ch = "_"){
+			if (underscore){
+				do ..pushError("each underscore must be surrounded by at least one digit")
+				return $$$NO
+			}
+			set underscore = $$$YES
+		}
+		else{
+			if (underscore){
+				do ..pushError("numeral cannot end with an underscore")
+				return $$$NO
+			}
+			return $$$YES
+		}
+		do ..next()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="boolean">
+<FormalSpec><![CDATA[&val:%Boolean]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..eat("t")){
+		if (..eat("r") && ..eat("u") && ..eat("e")){
+			set val = $$$YES
+			return $$$YES
+		}
+	}
+	elseif (..eat("f")){
+		if (..eat("a") && ..eat("l") && ..eat("s") && ..eat("e")){
+			set val = $$$NO
+			return $$$YES
+		}
+	}
+	do ..pushError("unexpected character: '"_..peek(1)_"'")
+	return $$$NO
+]]></Implementation>
+</Method>
+
+<Method name="datetime">
+<FormalSpec><![CDATA[&val:%TimeStamp]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set valid = $$$YES
+	set val = ""
+	for i=1:1:4{
+		set ch = ..next()
+		set valid = valid && (..isDigit(ch))
+		set val = val_ch
+	}
+	set valid = valid && ..expect("-")
+	set val = val_"-"
+	for i=1:1:2{
+		set ch = ..next()
+		set valid = valid && (..isDigit(ch))
+		set val = val_ch
+	}
+	set valid = valid && ..expect("-")
+	set val = val_"-"
+	for i=1:1:2{
+		set ch = ..next()
+		set valid = valid && (..isDigit(ch))
+		set val = val_ch
+	}
+	set valid = valid && ..expect("T")
+	set val = val_" "
+	for i=1:1:2{
+		set ch = ..next()
+		set valid = valid && (..isDigit(ch))
+		set val = val_ch
+	}
+	set valid = valid && ..expect(":")
+	set val = val_":"
+	for i=1:1:2{
+		set ch = ..next()
+		set valid = valid && (..isDigit(ch))
+		set val = val_ch
+	}
+	set valid = valid && ..expect(":")
+	set val = val_":"
+	for i=1:1:2{
+		set ch = ..next()
+		set valid = valid && (..isDigit(ch))
+		set val = val_ch
+	}
+	set valid = valid && ..expect("Z")
+	if ('valid) {
+		do ..pushError("malformed date literal")
+		return $$$NO
+	}
+	return $$$YES
+]]></Implementation>
+</Method>
+
+<Method name="array">
+<FormalSpec><![CDATA[&val:%Collection.AbstractList]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if ('..expect("[")) return $$$NO
+	set arrayType = ""
+	set val = ""
+	for {
+		do consume()
+		// Break out early if we see the closing bracket
+		if (..eat("]")){
+			if (arrayType = ""){
+				set val = ##class(%ListOfObjects).%New()
+			}
+			return $$$YES
+		}
+		
+		// Attempt to parse a value, triggering an error if it's the wrong
+		// type.
+		if ('..value(.item)) return $$$NO
+		set itemType = $s($isObject(item):"array",1:"datatype")
+		if (arrayType = ""){
+			set arrayType = itemType
+			set val = $s(arrayType = "array":##class(%ListOfObjects).%New(),
+				1:##class(%ListOfDataTypes).%New())
+		}
+		if (arrayType '= itemType) {
+			do ..pushError("expected "_arrayType_", but found "_itemType)
+			return $$$NO
+		}
+		do val.Insert(item)
+		do consume()
+		if ('..eat(",")) quit
+	}
+	do consume()
+	if ('..expect("]")) return $$$NO
+	return $$$YES
+
+	// it's not label - it's closure :)
+consume()
+	for {
+		do ..ws()
+		if ('..newLine() && '..comment()) quit
+	}
+	return
+]]></Implementation>
+</Method>
+
+<Method name="inlineTable">
+<FormalSpec><![CDATA[&val:Serializer.Serializable.Object]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if ('..expect("{")) return $$$NO
+	do ..ws()
+	set val = ##class(Serializer.Serializable.Object).%New()
+	if (..eat("}")) return $$$YES
+	for{
+		if ('..keyName(.key)) return $$$NO
+		if ('..keyvalSep()) return $$$NO
+		if ('..value(.item)) return $$$NO
+		do ..insert(val, key, item)
+		if (..eat("}")) return $$$YES
+		if ('..expect(",")) return $$$NO
+		do ..ws()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="insert">
+<FormalSpec>table:Serializer.Serializable.Object,key:%String,value</FormalSpec>
+<Implementation><![CDATA[
+	if (table.HasProperty(key)){
+		do ..pushError("duplicate key: '"_key_"'")
+	}
+	else{
+		set $property(table,key) = value
+	}
+]]></Implementation>
+</Method>
+
+<Method name="recurse">
+<FormalSpec><![CDATA[&cur:Serializer.Serializable.Object,keys:%ListOfDataTypes]]></FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	for i=1:1:keys.Count()-1{
+		set part = keys.GetAt(i)
+		if ('cur.HasProperty(part)){
+			set $property(cur, part) = ##class(Serializer.Serializable.Object).%New()
+		}
+		set inner = $property(cur, part)
+		if ('$isObject(inner)){
+			do ..pushError("key '"_part_"' was not previously a table")
+			return $$$NO
+		}
+		elseif (inner.%IsA("Serializer.Serializable.Object")){
+			set cur = inner
+		}
+		elseif (inner.%IsA("%Collection.AbstractList")){
+			if (inner.%IsA("%ListOfObjects")){
+				set cur = inner.GetAt(inner.Count())
+			}
+			else{
+				do ..pushError("array '"_part_"' doesn't contain tables")
+				return $$$NO
+			}
+		}
+		else{
+			do ..pushError("'"_part_"' has unknown type")
+			return $$$NO
+		}
+	}
+	return $$$YES
+]]></Implementation>
+</Method>
+
+<Method name="insertTable">
+<FormalSpec>into:Serializer.Serializable.Object,keys:%ListOfDataTypes,value:Serializer.Serializable.Object</FormalSpec>
+<Implementation><![CDATA[
+	if ('..recurse(.into, keys)) return
+	set key = keys.GetAt(keys.Count())
+	
+	if ('into.HasProperty(key)){
+		set $property(into, key) = ##class(Serializer.Serializable.Object).%New()
+	}
+	#dim target As Serializer.Serializable.Object = $property(into, key)
+	if ('$isObject(target) || 'target.%IsA("Serializer.Serializable.Object")){
+		do ..pushError("duplicate key '"_key_"' in table")
+		return
+	}
+	
+	// TODO: fix table redefinition recognition
+	// table without values won't be counted as defined
+	// [a]\n[a] will be correct
+	
+	set defined = $$$NO
+	set propIterator = target.GetIterator()
+	while(propIterator.GetNext(.k, .val)){
+		if ('$isObject(val)){
+			set defined = $$$YES
+			quit
+		}
+	}
+	
+	if (defined){
+		do ..pushError("redefinition of table '"_key_"'")
+	}
+	
+	set propIterator = value.GetIterator()
+	while(propIterator.GetNext(.k, .val)){
+		if (target.HasProperty(k)){
+			do ..pushError("duplicate key '"_k_"' in table")
+		}
+		set $property(target, k) = $property(value, k)
+	}
+]]></Implementation>
+</Method>
+
+<Method name="insertArray">
+<FormalSpec>into:Serializer.Serializable.Object,keys:%ListOfDataTypes,value:Serializer.Serializable.Object</FormalSpec>
+<Implementation><![CDATA[
+	if ('..recurse(.into, keys)) return
+	set key = keys.GetAt(keys.Count())
+	
+	if ('into.HasProperty(key)){
+		set $property(into, key) = ##class(%ListOfObjects).%New()
+	}
+	set target = $property(into, key)
+	if ('$isObject(target) || 'target.%IsA("%Collection.AbstractList")){
+		do ..pushError("key '"_key_"' was previously not an array")
+		return
+	}
+	
+	if ('target.%IsA("%ListOfObjects")){
+		do ..pushError("array '"_part_"' doesn't contain tables")
+		return
+	}
+	
+	do target.Insert(value)
+]]></Implementation>
+</Method>
+
+<Method name="isValidInKey">
+<FormalSpec>ch:%String</FormalSpec>
+<Implementation><![CDATA[
+	if (($a(ch)>=$a("a")) && ($a(ch)<=$a("z"))) return $$$YES
+	if (($a(ch)>=$a("A")) && ($a(ch)<=$a("Z"))) return $$$YES
+	if (..isDigit(ch)) return $$$YES
+	if (ch="-") return $$$YES
+	if (ch="_") return $$$YES
+	return $$$NO
+]]></Implementation>
+</Method>
+
+<Method name="isDigit">
+<FormalSpec>ch:%String</FormalSpec>
+<Implementation><![CDATA[
+	if (($a(ch)>=$a("0")) && ($a(ch)<=$a("9"))) return $$$YES
+	return $$$NO
+]]></Implementation>
+</Method>
+</Class>
+</Export>

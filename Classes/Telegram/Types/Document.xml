@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.Document">
+<Super>BaseType</Super>
+<TimeCreated>64130,63200.509438</TimeCreated>
+
+<Property name="file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="thumb">
+<Type>Telegram.Types.PhotoSize</Type>
+</Property>
+
+<Property name="file_name">
+<Type>%String</Type>
+</Property>
+
+<Property name="mime_type">
+<Type>%String</Type>
+</Property>
+
+<Property name="file_size">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.SendSticker">
+<Description>
+Use this method to send .webp stickers. On success, the sent Message is returned.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,42579.290185</TimeCreated>
+<ClientName>sendSticker</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="sticker">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="reply_to_message_id">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>%String</Type>
+</Property>
+
+<Parameter name="RETURN">
+<Default>Message</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    set ..sticker = sticker
+    set .."disable_notification" = $Get(disableNotification)
+    set .."reply_to_message_id" = $Get(replyToMessageId)
+    set .."reply_markup" = $Get(replyMarkup)
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

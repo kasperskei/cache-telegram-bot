@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.GetUserProfilePhotos">
+<Description>
+Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,73033.032955</TimeCreated>
+<ClientName>getUserProfilePhotos</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="offset">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="limit">
+<Type>%Integer</Type>
+</Property>
+
+<Parameter name="RETURN">
+<Default>UserProfilePhotos</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,offset:%String,limit:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    set ..offset = offset
+    set ..limit = limit
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

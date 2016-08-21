@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Src.Utils.Auxilliary">
+<Abstract>1</Abstract>
+<IncludeCode>%occStatus</IncludeCode>
+<TimeCreated>63441,42639.14263</TimeCreated>
+
+<Method name="ThrowIfError">
+<Description>
+Бросает исключение, если результат не 1</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sc:%Status</FormalSpec>
+<Implementation><![CDATA[
+	if ($$$ISOK(sc)) return
+	do ..ThrowStatus(sc)
+]]></Implementation>
+</Method>
+
+<Method name="ThrowString">
+<Description>
+Бросает исключение с заданным текстом</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>string:%String</FormalSpec>
+<Implementation><![CDATA[	do ..ThrowStatus($$$ERROR($$$GeneralError, string))
+]]></Implementation>
+</Method>
+
+<Method name="ThrowStatus">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sc:%Status</FormalSpec>
+<Implementation><![CDATA[	do ..Throw(##class(%Exception.StatusException).CreateFromStatus(sc))
+]]></Implementation>
+</Method>
+
+<Method name="Throw">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ex:%Exception.AbstractException</FormalSpec>
+<Implementation><![CDATA[
+	set ^||errInfo("hasError") = 1
+	set ^||errInfo($i(^||errInfo))=$zu(41)
+	For level=1:1:$zu(41) {
+		set ^||errInfo(^||errInfo,level) = $zu(41,level)
+		set key = $zu(42,level,"")
+		while (key'=""){
+			if ($zu(41,level,key)=level){
+				set ^||errInfo(^||errInfo,level,key)=$zu(43,level,key)
+			}
+			set key = $zu(42,level,key)
+		}
+	}
+	throw ex
+]]></Implementation>
+</Method>
+
+<Method name="IsPrefix">
+<Description>
+Проверяет, является ли строка substring префиксом строки string</Description>
+<ClassMethod>1</ClassMethod>
+<CodeMode>expression</CodeMode>
+<FormalSpec>string:%String,substring:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[$e(string,1,$l(substring))=substring
+]]></Implementation>
+</Method>
+
+<Method name="DeletePrefix">
+<Description>
+Удаляет префикс prefix из строки string.
+Если строка не содержит префикс, то бросает исключение.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>string:%String,prefix:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if ('..IsPrefix(string, prefix)) do ..ThrowString("Невозможно удалить '"_prefix_"' из строки '"_string_"'")
+	return $e(string,$l(prefix)+1,*)
+]]></Implementation>
+</Method>
+</Class>
+</Export>

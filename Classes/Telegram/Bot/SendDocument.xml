@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.SendDocument">
+<Description>
+Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64145,84360.401919</TimeCreated>
+<ClientName>sendDocument</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="document">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="reply_to_message_id">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>%String</Type>
+</Property>
+
+<Parameter name="RETURN">
+<Default>Message</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    set ..document = document
+    set ..caption = $Get(caption)
+    set .."disable_notification" = $Get(disableNotification)
+    set .."reply_to_message_id" = $Get(replyToMessageId)
+    set .."reply_markup" = $Get(replyMarkup)
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

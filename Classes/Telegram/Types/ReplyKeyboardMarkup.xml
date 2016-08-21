@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.ReplyKeyboardMarkup">
+<Description>
+This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).</Description>
+<Super>BaseType</Super>
+<TimeCreated>64141,62818.145481</TimeCreated>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Property keyboard As list Of %ListOfObjects(ELEMENTTYPE = "KeyboardButton") [ Required ];
+
+]]></Content>
+</UDLText>
+
+<Property name="keyboard">
+<Type>%ListOfObjects</Type>
+<Collection>list</Collection>
+<Required>1</Required>
+</Property>
+
+<Property name="resize_keyboard">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="one_time_keyboard">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="selective">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.SendVoice">
+<Description>
+Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,42628.946962</TimeCreated>
+<ClientName>sendVoice</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="voice">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="duration">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="reply_to_message_id">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>%String</Type>
+</Property>
+
+<Parameter name="RETURN">
+<Default>Message</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,voice:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    set ..voice= voice
+    set ..duration = $Get(duration)
+    set .."disable_notification" = $Get(disableNotification)
+    set .."reply_to_message_id" = $Get(replyToMessageId)
+    set .."reply_markup" = $Get(replyMarkup)
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.GetFile">
+<Description><![CDATA[
+Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.]]></Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,73280.579647</TimeCreated>
+<ClientName>getFile</ClientName>
+
+<Property name="file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Parameter name="RETURN">
+<Default>File</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>fileId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."file_id" = fileId
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

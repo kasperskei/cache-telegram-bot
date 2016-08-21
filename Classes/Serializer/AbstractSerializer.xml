@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:14">
+<Class name="Serializer.AbstractSerializer">
+<IncludeCode>Src.Utils.Macro</IncludeCode>
+<Super>%RegisteredObject</Super>
+<TimeChanged>64132,42259</TimeChanged>
+<TimeCreated>64127,46192.434557</TimeCreated>
+
+<Method name="InternalSerializeObject">
+<Abstract>1</Abstract>
+<FormalSpec>object:Serializer.Serializable.Object,stream:%Stream.Object</FormalSpec>
+</Method>
+
+<Method name="InternalSerializeArray">
+<Abstract>1</Abstract>
+<FormalSpec>object:%Array,stream:%Stream.Object</FormalSpec>
+</Method>
+
+<Method name="InternalSerializeDataType">
+<Abstract>1</Abstract>
+<FormalSpec>object:%DataType,stream:%Stream.Object</FormalSpec>
+</Method>
+
+<Method name="InternalSerialize">
+<FormalSpec>object,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[
+	if ('$isobject(object)) {
+		do ..InternalSerializeDataType(object, stream)
+	}
+	elseif(object.%IsA("Serializer.Serializable.Object")){
+		do ..InternalSerializeObject(object, stream)
+	}
+	elseif(object.%IsA("%Library.Array")){
+		do ..InternalSerializeArray(object, stream)
+	}
+	else{
+		$$$throw("Cannot serialize object")
+	}
+]]></Implementation>
+</Method>
+
+<Method name="Serialize">
+<FormalSpec>object,stream:%Stream.Object,maxLen:%Integer=32656</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set oStream = $select($data(stream): stream, 1: ##class(%Stream.TmpBinary).%New())
+	do ..InternalSerialize(object, oStream)
+	if ('$data(stream)){
+		if (oStream.Size > maxLen) $$$throw("Serialized object is too long for %String")
+		set ret = oStream.Read(.maxLen, .sc)
+		$$$do(sc)
+	}
+	else{
+		set ret = ""
+	}
+	return ret
+]]></Implementation>
+</Method>
+</Class>
+</Export>

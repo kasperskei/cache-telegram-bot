@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.GetChatMember">
+<Description>
+Use this method to get information about a member of a chat. Returns a ChatMember object on success.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,74342.289793</TimeCreated>
+<ClientName>getChatMember</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="user_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Parameter name="RETURN">
+<Default>ChatMember</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,userId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+	set .."user_id" = userId
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

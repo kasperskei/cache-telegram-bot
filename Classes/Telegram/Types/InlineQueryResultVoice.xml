@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.InlineQueryResultVoice">
+<Description>
+Represents a link to a voice recording in an .ogg container encoded with OPUS. By default, this voice recording will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the the voice message.</Description>
+<Super>BaseType</Super>
+<TimeCreated>64149,84146.49197</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="voice_url">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="voice_duration">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>InlineKeyboardMarkup</Type>
+</Property>
+
+<Property name="input_message_content">
+<Type>%Object</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.SetWebhook">
+<Super>BaseRequest</Super>
+<TimeCreated>64131,44562.507816</TimeCreated>
+<ClientName>setWebhook</ClientName>
+
+<Property name="url">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="certificate">
+<Type>%FileBinaryStream</Type>
+</Property>
+
+<Method name="%OnNew">
+<FormalSpec>url:%String,certificate:%FileBinaryStream</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ..url = url
+    set ..certificate = certificate
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.UnbanChatMember">
+<Description>
+Use this method to unban a previously kicked user in a supergroup. The user will not return to the group automatically, but will be able to join via link, etc. The bot must be an administrator in the group for this to work. Returns True on success.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,73884.275521</TimeCreated>
+<ClientName>unbanChatMember</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="user_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Parameter name="RETURN">
+<Default>%Boolean</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,userId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+	set .."user_id" = userId
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

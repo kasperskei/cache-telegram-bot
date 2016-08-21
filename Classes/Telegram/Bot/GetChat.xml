@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.GetChat">
+<Description>
+Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,73965.859064</TimeCreated>
+<ClientName>getChat</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Parameter name="RETURN">
+<Default>Chat</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

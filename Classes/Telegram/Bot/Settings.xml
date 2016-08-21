@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.Settings">
+<Description>
+Connection settings to the Telegram Bot Api</Description>
+<Super>%Persistent</Super>
+<TimeCreated>64131,17480.634683</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="NameIndex">
+<Properties>Name</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Property name="SSLConfiguration">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Token">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Server">
+<Type>%String</Type>
+</Property>
+
+<Property name="Port">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="Https">
+<Type>%Boolean</Type>
+</Property>
+
+<Method name="%OnNew">
+<FormalSpec>Name:%String,SSLConfiguration:%String,Token:%String,Server:%String="api.telegram.org",Port:%Integer=443,Https:%Boolean=1</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ..Name = Name
+	set ..SSLConfiguration = SSLConfiguration
+	set ..Token = Token
+	set ..Server = Server
+	set ..Port = Port
+	set ..Https = Https
+    return $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Telegram.Bot.SettingsD</DataLocation>
+<DefaultData>SettingsDefaultData</DefaultData>
+<IdLocation>^Telegram.Bot.SettingsD</IdLocation>
+<IndexLocation>^Telegram.Bot.SettingsI</IndexLocation>
+<StreamLocation>^Telegram.Bot.SettingsS</StreamLocation>
+<Data name="SettingsDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Https</Value>
+</Value>
+<Value name="4">
+<Value>Server</Value>
+</Value>
+<Value name="5">
+<Value>SSLConfiguration</Value>
+</Value>
+<Value name="6">
+<Value>Token</Value>
+</Value>
+<Value name="7">
+<Value>Port</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

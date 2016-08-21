@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.AnswerCallbackQuery">
+<Description>
+Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,74855.821137</TimeCreated>
+<ClientName>answerCallbackQuery</ClientName>
+
+<Property name="callback_query_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="text">
+<Type>%String</Type>
+</Property>
+
+<Property name="show_alert">
+<Type>%Boolean</Type>
+</Property>
+
+<Parameter name="RETURN">
+<Default>%Boolean</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."callback_query_id" = callbackQueryId
+	set ..text = text
+	set .."show_alert" = showAlert
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

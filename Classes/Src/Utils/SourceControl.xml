@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:06:31">
+<Class name="Src.Utils.SourceControl">
+<ClassType/>
+<IncludeCode>Src.Utils.Macro</IncludeCode>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%Studio.SourceControl.Base</Super>
+<TimeChanged>64113,36823.00256</TimeChanged>
+<TimeCreated>59078,62120</TimeCreated>
+
+<Parameter name="SETTINGS">
+<Expression>"^"_%class</Expression>
+</Parameter>
+
+<Method name="ExternalName">
+<Description>
+Convert the internal name, e.g. TEST.MAC to an external name that is used to export
+the routine/class/csp item. This is often a filename to write the file out to.</Description>
+<FormalSpec>InternalName:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+    if ('$Data(@..#SETTINGS)) return ""
+    if ('$get(@..#SETTINGS@("Path"))="") return ""
+    Set name=$p(InternalName,".",1,$l(InternalName,".")-1),
+    ext=$p(InternalName,".",$l(InternalName,".")),
+    ext=$zcvt(ext,"u")
+    If ( name="" ) return ""
+    If ( (ext="CLS") || (ext="PKG") ) {
+        set path = ##class(%File).SubDirectoryName(@..#SETTINGS@("Path"), "Classes")
+    }
+    elseif ( ext="INC" ) {
+        set path = ##class(%File).SubDirectoryName(@..#SETTINGS@("Path"), "Include")
+    }
+    else {
+        return ""
+    }
+    for i=1:1:$l(name,".")
+    {
+        set path = ##class(%File).SubDirectoryName(path, $p(name,".",i))
+    }
+    
+    If ( ext'="PKG" ) {
+        set path = path_".xml"
+    }
+    return path
+]]></Implementation>
+</Method>
+
+<Method name="GetStatus">
+<Description>
+Return information about this entity.</Description>
+<FormalSpec><![CDATA[InternalName:%String,&IsInSourceControl:%Boolean,&Editable:%Boolean,&IsCheckedOut:%Boolean,&UserCheckedOut:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    Set Editable=1,IsCheckedOut=0,UserCheckedOut="",IsInSourceControl=1
+    Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="IsGenerated">
+<Description>
+Return 1 if you wish this item to appear as if it is 'generated' when opened in Studio,
+return 0 to force this item not to appear as 'generated' and return "" to use normal processing</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>Name:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[    Quit ""
+]]></Implementation>
+</Method>
+
+<Method name="IsReadOnly">
+<Description>
+Return true if this item should be marked as read only.
+This is called when Studio opens a document. It is set to indicate
+that the user checked the 'read only' checkbox in the open
+dialog in Studio.</Description>
+<FormalSpec>InternalName:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[    Quit ..IsGenerated(InternalName)=1
+]]></Implementation>
+</Method>
+
+<Method name="OnBeforeDelete">
+<Description>
+Called before an item is deleted. Returning an error code prevents the delete from occuring.</Description>
+<FormalSpec>InternalName:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[    Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="OnBeforeLoad">
+<Description>
+This is called before the actual load of data to give the chance
+to load the item from an external format.</Description>
+<FormalSpec>InternalName:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    try{
+        do ..Load(InternalName)
+        return $$$OK
+    }
+    catch ex{
+        return ex.AsStatus()
+    }
+]]></Implementation>
+</Method>
+
+<Method name="OnAfterSave">
+<Description>
+Export the routine/class/csp file to the external format.
+This is called after the item has been saved to the database.</Description>
+<FormalSpec>InternalName:%String,Object:%RegisteredObject=$$$NULLOREF</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    try{
+        do ..Save(InternalName)
+        return $$$OK
+    }
+    catch ex{
+        return ex.AsStatus()
+    }
+]]></Implementation>
+</Method>
+
+<Method name="MakePath">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>filename:%String</FormalSpec>
+<Private>1</Private>
+<Implementation><![CDATA[
+    Set dir=##class(%File).GetDirectory(filename)
+    if ('##class(%File).CreateDirectoryChain(dir)) $$$throw("Cannot create directory '"_dir_"'")
+]]></Implementation>
+</Method>
+
+<Method name="GetLatest">
+<Description>
+Get the latest version of this file from source control.</Description>
+<FormalSpec>InternalName:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    try{
+        do ..Load(InternalName)
+        return $$$OK
+    }
+    catch ex{
+        return ex.AsStatus()
+    }
+]]></Implementation>
+</Method>
+
+<Method name="Load">
+<FormalSpec>InternalName:%String</FormalSpec>
+<Implementation><![CDATA[
+    Set filename=..ExternalName(InternalName)
+    If filename="" Return $$$OK
+    If ('##class(%File).Exists(filename)) { 
+        Write:'$get(@..#SETTINGS@("nodisplay")) !,"File '",filename,"' not found, skipping import" 
+        Return
+    }
+    If (##class(%File).DirectoryExists(filename)) {
+        $$$do($system.OBJ.LoadDir(filename,,,$$$YES))
+    }
+    else {
+        If (##class(%File).GetFileDateModified(filename)=$get(@..#SETTINGS@("FileTimeStamp",InternalName))) {
+            Write:'$get(@..#SETTINGS@("nodisplay")) !,"File '",filename,"' is up to date, skipping import" 
+            Return
+        }
+        $$$do($system.OBJ.Load(filename))
+    }
+    Write:'$get(@..#SETTINGS@("nodisplay")) !,"Imported '",InternalName,"' from file '",filename,"'"
+    Set @..#SETTINGS@("FileTimeStamp",InternalName)=##class(%File).GetFileDateModified(filename)
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<FormalSpec>InternalName:%String</FormalSpec>
+<Implementation><![CDATA[
+    Set filename=..ExternalName(InternalName)
+    If filename="" return $$$OK
+    Set name=$Piece(InternalName,".",1,$Length(InternalName,".")-1)
+    Set ext=$ZConvert($Piece(InternalName,".",$Length(InternalName,".")),"U")
+    If ('##class(%File).Exists(filename)) Do ..MakePath(filename)
+    $$$do($system.OBJ.Export(InternalName,filename,"/diffexport"))
+    Write:'$get(@..#SETTINGS@("nodisplay")) !,"Exported '",InternalName,"' to file '",filename,"'"
+    Set @..#SETTINGS@("FileTimeStamp",InternalName)=##class(%File).GetFileDateModified(filename)
+]]></Implementation>
+</Method>
+
+<Method name="Init">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>path:%String</FormalSpec>
+<Implementation><![CDATA[    set @##class(Src.Utils.SourceControl).#SETTINGS@("Path") = path
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.ChosenInlineResult">
+<Description>
+Represents a result of an inline query that was chosen by the user and sent to their chat partner. </Description>
+<Super>BaseType</Super>
+<TimeCreated>64146,76248.183806</TimeCreated>
+
+<Property name="result_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="from">
+<Type>User</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="location">
+<Type>Location</Type>
+</Property>
+
+<Property name="inline_message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="query">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.InlineQueryResultVenue">
+<Description>
+Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the venue.</Description>
+<Super>BaseType</Super>
+<TimeCreated>64149,84297.282276</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="latitude">
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="longitude">
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="address">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="foursquare_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>InlineKeyboardMarkup</Type>
+</Property>
+
+<Property name="input_message_content">
+<Type>%Object</Type>
+</Property>
+
+<Property name="thumb_url">
+<Type>%String</Type>
+</Property>
+
+<Property name="thumb_width">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="thumb_height">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

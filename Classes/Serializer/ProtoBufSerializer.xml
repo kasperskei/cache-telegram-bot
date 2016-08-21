@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:32">
+<Class name="Serializer.ProtoBufSerializer">
+<Super>Serializer.AbstractSerializer</Super>
+<TimeChanged>64132,42261</TimeChanged>
+<TimeCreated>64127,51157.511037</TimeCreated>
+
+<Method name="InternalSerializeObject">
+<FormalSpec>object:Serializer.Serializable.Object,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[
+	set objStream = ##class(%Stream.TmpBinary).%New()
+	set metadata = ##class(ProtoBufMetadataProvider).%New(object.%ClassName(1))
+	set iterator = object.GetStaticIterator()
+	while(iterator.GetNext(.prop)){
+		set tag = metadata.PropToTag(prop)
+		set propVal = $property(object, prop)
+		set type = $s($number(propVal)'="": 0, 1: 2)
+		if (propVal = "") continue
+		do ..InternalSerializeVarInt((tag * 8) + type, objStream)
+		if (type = 2) {
+			do ..InternalSerialize(propVal, objStream)
+		}
+		elseif (type = 0){
+			do ..InternalSerialize(propVal, objStream)
+		}
+		else {
+			$$$throw("it's not valid type")
+		}
+	}
+	set len = objStream.Size
+	do ..InternalSerializeVarInt(len, stream)
+	$$$do(objStream.Rewind())
+	while('objStream.AtEnd){
+		set read = objStream.Read()
+		$$$do(stream.Write(read))
+	}
+]]></Implementation>
+</Method>
+
+<Method name="InternalSerializeDataType">
+<FormalSpec>object:%DataType,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[
+	if ($number(object)'=""){
+		do ..InternalSerializeZigZag(object, stream)
+	}
+	else {
+		do ..InternalSerializeString(object, stream)
+	}
+]]></Implementation>
+</Method>
+
+<Method name="InternalSerializeString">
+<FormalSpec>object:%DataType,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[
+	//Utf8
+	set utfi = $ZCONVERT(object,"O","UTF8")
+	set len = $length(utfi)
+	do ..InternalSerializeVarInt(len, stream)
+	$$$do(stream.Write(utfi))
+]]></Implementation>
+</Method>
+
+<Method name="InternalSerializeVarInt">
+<FormalSpec>object:%DataType,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[
+	set a = object
+	set b = 0
+	while (a'=0)
+	{ 
+		s b = a#128
+		s a = a\128
+		if (a '= 0){
+			s b = b + 128
+		}
+		$$$do(stream.Write($c(b)))
+	}
+]]></Implementation>
+</Method>
+
+<Method name="InternalSerializeZigZag">
+<FormalSpec>object:%DataType,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[
+	set a = object
+	set a = a * 2
+	if (a<0){ set a = a - 1	}
+	do ..InternalSerializeVarInt(a, stream)
+]]></Implementation>
+</Method>
+</Class>
+</Export>

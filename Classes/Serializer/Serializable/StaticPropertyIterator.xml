@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:08:02">
+<Class name="Serializer.Serializable.StaticPropertyIterator">
+<Super>%RegisteredObject</Super>
+<TimeChanged>64132,42289</TimeChanged>
+<TimeCreated>64127,57024.138793</TimeCreated>
+
+<Property name="curPos">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="props">
+<Type>%String</Type>
+</Property>
+
+<Method name="%OnNew">
+<FormalSpec>properties:%String</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	set ..props = properties
+	set ..curPos = 0
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetNext">
+<FormalSpec>*key</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..curPos<$ll(..props)){
+		set ..curPos = ..curPos+1
+		set key = $li(..props, ..curPos)
+		ret $$$YES
+	}
+	else{
+		ret $$$NO
+	}
+]]></Implementation>
+</Method>
+</Class>
+</Export>

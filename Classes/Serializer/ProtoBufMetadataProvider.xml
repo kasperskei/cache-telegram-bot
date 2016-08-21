@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:30">
+<Class name="Serializer.ProtoBufMetadataProvider">
+<IncludeCode>Src.Utils.Macro</IncludeCode>
+<Super>%RegisteredObject</Super>
+<TimeChanged>64132,42261</TimeChanged>
+<TimeCreated>64127,69529.442441</TimeCreated>
+
+<Property name="PropToTag">
+<Type>%Integer</Type>
+<MultiDimensional>1</MultiDimensional>
+</Property>
+
+<Property name="TagToProp">
+<Type>%String</Type>
+<MultiDimensional>1</MultiDimensional>
+</Property>
+
+<Method name="%OnNew">
+<FormalSpec>classname:%String</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	if ('$classmethod(classname, "%IsA", "Serializer.Serializable.Object")){
+		$$$throw("Can't get properties for '"_classname_"'")
+	}
+	set iterator = $classmethod(classname, "GetStaticIterator")
+	set i = 0
+	while (iterator.GetNext(.key)){
+		set i = i+1
+		set ..PropToTag(key) = i
+		set ..TagToProp(i) = key
+	}
+	return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

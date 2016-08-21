@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.ForwardMessage">
+<Description>
+Use this method to forward messages of any kind. On success, the sent Message is returned.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64141,62115.002663</TimeCreated>
+<ClientName>forwardMessage</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="from_chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="message_id">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Parameter name="RETURN">
+<Default>Message</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    set .."from_chat_id" = fromChatId
+    set .."disable_notification" = $Get(disableNotification)
+    set .."message_id" = messageId
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

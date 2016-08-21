@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:25">
+<Class name="Serializer.JsonSerializer">
+<Super>Serializer.AbstractSerializer</Super>
+<TimeChanged>64132,42260</TimeChanged>
+<TimeCreated>64127,85662.523323</TimeCreated>
+
+<Method name="InternalSerializeArray">
+<FormalSpec>object:%Array,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[	do object.$toJSON(stream)
+]]></Implementation>
+</Method>
+
+<Method name="InternalSerializeDataType">
+<FormalSpec>object:%DataType,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[	$$$throw("Can serialize only objects and arrays")
+]]></Implementation>
+</Method>
+
+<Method name="InternalSerializeObject">
+<FormalSpec>object:Serializer.Serializable.Object,stream:%Stream.Object</FormalSpec>
+<Implementation><![CDATA[	do ..ConvertObject(object).$toJSON(stream)
+]]></Implementation>
+</Method>
+
+<Method name="ConvertObject">
+<FormalSpec>object:Serializer.Serializable.Object</FormalSpec>
+<ReturnType>%Object</ReturnType>
+<Implementation><![CDATA[
+	set obj = ##class(%Object).%New()
+	set iterator = object.GetIterator()
+	while(iterator.GetNext(.key, .val)){
+		set $property(obj, key) = ..ConvertVal(val)
+	}
+	return obj
+]]></Implementation>
+</Method>
+
+<Method name="ConvertArray">
+<FormalSpec>object:%Array</FormalSpec>
+<ReturnType>%Object</ReturnType>
+<Implementation><![CDATA[
+	set obj = ##class(%Array).%New()
+	set iterator = object.$getIterator()
+	while(iterator.$getNext(.key, .val)){
+		set $property(obj, key) = ..ConvertVal(val)
+	}
+	return obj
+]]></Implementation>
+</Method>
+
+<Method name="ConvertVal">
+<FormalSpec>val</FormalSpec>
+<Implementation><![CDATA[
+	if ('$isobject(val)){
+		return val
+	}
+	elseif(val.%IsA("Serializer.Serializable.Object")){
+		return ..ConvertObject(val)
+	}
+	elseif(val.%IsA("%Array")){
+		return ..ConvertArray(val)
+	}
+	else{
+		return val
+	}
+]]></Implementation>
+</Method>
+</Class>
+</Export>

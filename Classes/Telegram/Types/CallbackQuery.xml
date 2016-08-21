@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Types.CallbackQuery">
+<Super>BaseType</Super>
+<TimeCreated>64130,63203.285064</TimeCreated>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="from">
+<Type>Telegram.Types.User</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="message">
+<Type>Telegram.Types.Message</Type>
+</Property>
+
+<Property name="inline_message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="data">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:28">
+<Class name="Serializer.ProtoBufDeserializer">
+<Super>Serializer.AbstractDeserializer</Super>
+<TimeChanged>64132,42261</TimeChanged>
+<TimeCreated>64127,72554.473963</TimeCreated>
+
+<Method name="ParseObject">
+<FormalSpec>stream:%Stream.Object,className:%String,*readBytes</FormalSpec>
+<ReturnType>Serializer.Serializable.Object</ReturnType>
+<Implementation><![CDATA[
+	set metadata = ##class(ProtoBufMetadataProvider).%New(className)
+	set size = ..ParseVarInt(stream, .readBytes)
+	set wsize = size
+	set object = $classmethod(className, "%New")
+	while (size > 0){
+		set tag = ..ParseVarInt(stream, .tmp)
+		set size = size - tmp
+		set type = tag#8
+		set tag = tag\8
+		set propName = metadata.TagToProp(tag)
+		set prop = ##class(%Dictionary.PropertyDefinition).%OpenId(className_"||"_propName)
+		set propType = prop.Type
+		if ($classmethod(propType, "%IsA", "Serializer.Serializable.Object")){
+			set $property(object, propName) = ..ParseObject(stream, propType, .tmp)
+		}
+		elseif($classmethod(propType, "%IsA", "%DataType")){
+			if (type = 2){
+				set $property(object, propName) = ..ParseString(stream, .tmp)
+			}
+			elseif (type = 0){
+				set $property(object, propName) = ..ParseZigZag(stream, .tmp)
+			}
+			else{
+				$$$throw("Unknown type: "_type)
+			}
+		}
+		else{
+			$$$throw("Expected serializable object or datatype, got '"_propType_"'")
+		}
+		set size = size - tmp
+	}
+	if (size<0) $$$throw("Read "_(-size)_" bytes more than expected "_wsize)
+	set readBytes = readBytes+wsize
+	return object
+]]></Implementation>
+</Method>
+
+<Method name="ParseString">
+<FormalSpec>stream:%Stream.Object,*readBytes</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set l = ..ParseVarInt(stream, .readBytes)
+	set readLen = l
+	set ret = stream.Read(.readLen, .sc)
+	$$$do(sc)
+	if (readLen < l) $$$throw("Expecting "_l_" bytes, got only "_readLen)
+	set readBytes = readBytes + readLen
+	return ret
+]]></Implementation>
+</Method>
+
+<Method name="ParseVarInt">
+<FormalSpec>stream:%Stream.Object,*readBytes</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	s a = 0
+	set power = 1
+	set end = $$$NO
+	set readBytes = 0
+	while ('end){
+		if (stream.AtEnd) $$$throw("Expecting byte, got EOF")
+		set b = stream.Read(1)
+		set readBytes = readBytes + 1
+		set b = $a(b)
+		if (b >= 128) {
+			set b = b - 128
+		}
+		else{
+			set end = $$$YES
+		}
+			
+		set a = a + (b * power)
+		set power = power * 128
+	}
+	return a
+]]></Implementation>
+</Method>
+
+<Method name="ParseZigZag">
+<FormalSpec>stream:%Stream.Object,*readBytes</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	set a = ..ParseVarInt(stream, .readBytes)
+	if (a#2){
+		set a = (-a-1)
+	}
+	return a/2
+]]></Implementation>
+</Method>
+
+<Method name="InternalDeserialize">
+<FormalSpec>stream:%Stream.Object,classname:%String</FormalSpec>
+<Implementation><![CDATA[
+	if ($classmethod(classname, "%IsA", "Serializer.Serializable.Object")){
+		return ..ParseObject(stream, classname)
+	}
+	elseif (classname = "%String"){
+		return ..ParseString(stream)
+	}
+	elseif (classname = "%Integer"){
+		return ..ParseZigZag(stream)
+	}
+	else{
+		$$$throw("Expected serializable object or datatype, got '"_propType_"'")
+	}
+]]></Implementation>
+</Method>
+</Class>
+</Export>

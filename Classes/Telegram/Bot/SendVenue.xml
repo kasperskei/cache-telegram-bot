@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.SendVenue">
+<Description>
+Use this method to send information about a venue. On success, the sent Message is returned.</Description>
+<Super>BaseRequest</Super>
+<TimeCreated>64146,42656.656701</TimeCreated>
+<ClientName>sendVenue</ClientName>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="latitude">
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="longitude">
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="address">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="foursquare_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="reply_to_message_id">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>%String</Type>
+</Property>
+
+<Parameter name="RETURN">
+<Default>Message</Default>
+</Parameter>
+
+<Method name="%OnNew">
+<FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set .."chat_id" = chatId
+    set ..latitude = latitude
+    set ..longitude = longitude
+    set ..title = title
+    set ..address = address
+    set .."foursquare_id" = $Get(foursquareId)
+    set .."disable_notification" = $Get(disableNotification)
+    set .."reply_to_message_id" = $Get(replyToMessageId)
+    set .."reply_markup" = $Get(replyMarkup)
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

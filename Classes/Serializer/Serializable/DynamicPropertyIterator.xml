@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Serializer.Serializable.DynamicPropertyIterator">
+<Super>%RegisteredObject</Super>
+<TimeCreated>64127,57024.655046</TimeCreated>
+
+<Property name="static">
+<Type>Serializer.Serializable.StaticPropertyIterator</Type>
+</Property>
+
+<Property name="dynamic">
+<Type>%Iterator.Object</Type>
+</Property>
+
+<Property name="obj">
+</Property>
+
+<Method name="%OnNew">
+<FormalSpec>properties:%String,iterator:%Iterator.Object,obj</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	set ..static = ##class(StaticPropertyIterator).%New(properties)
+	set ..dynamic = iterator
+	set ..obj = obj
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetNext">
+<FormalSpec>*key,*value</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	if (..static.GetNext(.key)){
+		set value = $property(..obj, key)
+		ret $$$YES
+	}
+	elseif(..dynamic.$getNext(.key, .value)){
+		ret $$$YES
+	}
+	else{
+		ret $$$NO
+	}
+]]></Implementation>
+</Method>
+</Class>
+</Export>
