@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.BaseEditMessage">
+<Super>BaseRequest</Super>
+<TimeCreated>64152,63113.407027</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="inline_message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>Telegram.Types.InlineKeyboardMarkup</Type>
+</Property>
+</Class>
+</Export>

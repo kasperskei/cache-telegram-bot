@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.Api">
+<Super>%RegisteredObject</Super>
+<TimeCreated>64152,43802.402025</TimeCreated>
+
+<Method name="AnswerCallbackQuery">
+<FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.AnswerCallbackQuery).%New()
+	set api."callback_query_id" = callbackQueryId
+	set api.text = $Get(text)
+	set api."show_alert" = $Get(showAlert)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%Boolean")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ToDo Convert result Array of InlineQueryResult
+
+]]></Content>
+</UDLText>
+
+<Method name="AnswerInlineQuery">
+<FormalSpec>inlineQueryId:%String,results:%ListOfObjects,cacheTime:%Integer,isPersonal:%Boolean,nextOffset:%String,switchPmText:%String,switchPmParameter:%String</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.AnswerInlineQuery).%New()
+	set api."inline_query_id" = inlineQueryId
+    set api.results = results
+    set api."cache_time" = $Get(cacheTime)
+    set api."is_personal" = $Get(isPersonal)
+    set api."next_offset" = $Get(nextOffset)
+    set api."switch_pm_text" = $Get(switchPmText)
+    set api."switch_pm_parameter" = $Get(switchPmParameter)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%Boolean")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="ForwardMessage">
+<FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.ForwardMessage).%New()
+	set api."chat_id" = chatId
+    set api."from_chat_id" = fromChatId
+    set api."disable_notification" = $Get(disableNotification)
+    set api."message_id" = messageId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="GetChat">
+<FormalSpec>chatId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetChat).%New()
+	set api."chat_id" = chatId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Chat")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ToDo Convert Array of ChatMember
+
+]]></Content>
+</UDLText>
+
+<Method name="GetChatAdministrators">
+<FormalSpec>chatId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetChatAdministrators).%New()
+	set api."chat_id" = chatId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%ListOfObjects")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="GetChatMember">
+<FormalSpec>chatId:%String,userId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetChatMember).%New()
+	set api."chat_id" = chatId
+	set api."user_id" = userId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.ChatMember")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="GetChatMembersCount">
+<FormalSpec>chatId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetChatMembersCount).%New()
+	set api."chat_id" = chatId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%Integer")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="GetFile">
+<FormalSpec>fileId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetFile).%New()
+	set api."file_id" = fileId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.File")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="GetMe">
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetMe).%New()
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.User")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ToDo convert Array of Update
+
+]]></Content>
+</UDLText>
+
+<Method name="GetUpdates">
+<FormalSpec>offset:%Integer,limit:%Integer,timeout:%Integer</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetMe).%New()
+    set api.offset = offset
+    set api.limit = limit
+    set api.timeout = timeout
+    
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%ListOfObjects")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="GetUserProfilePhotos">
+<FormalSpec>chatId:%String,offset:%Integer,limit:%Integer</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.GetUserProfilePhotos).%New()
+	set api."chat_id" = chatId
+    set api.offset = offset
+    set api.limit = limit
+    
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.UserProfilePhotos")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="KickChatMember">
+<FormalSpec>chatId:%String,userId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.KickChatMember).%New()
+	set api."chat_id" = chatId
+	set api."user_id" = userId
+    
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%Boolean")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="LeaveChat">
+<FormalSpec>chatId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.LeaveChat).%New()
+	set api."chat_id" = chatId
+    
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%Boolean")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendAudio">
+<FormalSpec>chatId:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendAudio).%New()
+	set api."chat_id" = chatId
+	set api.duration = $Get(duration)
+	set api.performer = $Get(performer)
+	set api.title = $Get(title)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+    
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendChatAction">
+<FormalSpec>chatId:%String,action:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendChatAction).%New()
+	set api."chat_id" = chatId
+    set api.action = action
+    
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendContact">
+<FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendContact).%New()
+    set api."phone_number" = phoneNumber
+    set api."first_name" = $Get(firstName)
+    set api."last_name" = $Get(lastName)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendDocument">
+<FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendDocument).%New()
+    set api."chat_id" = chatId
+    set api.document = document
+    set api.caption = $Get(caption)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendLocation">
+<FormalSpec>chatId:%String,latitude:%Float,longitude:%Float,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendLocation).%New()
+	set api."chat_id" = chatId
+    set api.latitude = latitude
+    set api.longitude = longitude
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendMessage">
+<FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendMessage).%New()
+	set api."chat_id" = chatId
+    set api.text = text
+    set api."parse_mode" = $Get(parseMode)
+    set api."disable_web_page_preview" = $Get(disableWebPagePreview)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendPhoto">
+<FormalSpec>chatId:%String,photo:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendPhoto).%New()
+	set api."chat_id" = chatId
+    set api.photo = photo
+    set api.caption = $Get(caption)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendSticker">
+<FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendSticker).%New()
+	set api."chat_id" = chatId
+    set api.sticker = sticker
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendVenue">
+<FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendVenue).%New()
+	set api."chat_id" = chatId
+    set api.latitude = latitude
+    set api.longitude = longitude
+    set api.title = title
+    set api.address = address
+    set api."foursquare_id" = $Get(foursquareId)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendVideo">
+<FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendVideo).%New()
+	set api."chat_id" = chatId
+    set api.video = video
+    set api.duration = $Get(duration)
+    set api.width = $Get(width)
+    set api.height = $Get(height)
+    set api.caption = $Get(caption)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SendVoice">
+<FormalSpec>chatId:%String,voice:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SendVoice).%New()
+	set api."chat_id" = chatId
+    set api.voice= voice
+    set api.duration = $Get(duration)
+    set api."disable_notification" = $Get(disableNotification)
+    set api."reply_to_message_id" = $Get(replyToMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="SetWebhook">
+<FormalSpec>url:%String,certificate:%FileBinaryStream</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.SetWebhook).%New()
+	set api.url = url
+    set api.certificate = certificate
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="UnbanChatMember">
+<FormalSpec>chatId:%String,userId:%String</FormalSpec>
+<ReturnType>Telegram.Types.ApiResponse</ReturnType>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.UnbanChatMember).%New()
+	set api."chat_id" = chatId
+	set api."user_id" = userId
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		set response.result = response.result.Convert("%Boolean")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+</Class>
+</Export>
