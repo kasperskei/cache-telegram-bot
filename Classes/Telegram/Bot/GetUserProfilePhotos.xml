@@ -19,20 +19,5 @@ Use this method to get a list of profile pictures for a user. Returns a UserProf
 <Property name="limit">
 <Type>%Integer</Type>
 </Property>
-
-<Parameter name="RETURN">
-<Default>UserProfilePhotos</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,offset:%String,limit:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    set ..offset = offset
-    set ..limit = limit
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

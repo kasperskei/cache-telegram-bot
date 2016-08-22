@@ -3,14 +3,9 @@
 <Class name="Telegram.Bot.SendAudio">
 <Description>
 Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.</Description>
-<Super>BaseRequest</Super>
+<Super>BaseSend</Super>
 <TimeCreated>64146,42544.541727</TimeCreated>
 <ClientName>sendAudio</ClientName>
-
-<Property name="chat_id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="audio">
 <Type>%String</Type>
@@ -28,36 +23,5 @@ Use this method to send audio files, if you want Telegram clients to display the
 <Property name="title">
 <Type>%String</Type>
 </Property>
-
-<Property name="disable_notification">
-<Type>%Boolean</Type>
-</Property>
-
-<Property name="reply_to_message_id">
-<Type>%Integer</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>%String</Type>
-</Property>
-
-<Parameter name="RETURN">
-<Default>Message</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-	set ..duration = duration
-	set ..performer = performer
-	set ..title = title
-    set .."disable_notification" = $Get(disableNotification)
-    set .."reply_to_message_id" = $Get(replyToMessageId)
-    set .."reply_markup" = $Get(replyMarkup)
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

@@ -3,18 +3,8 @@
 <Class name="Telegram.Types.InlineQueryResultVideo">
 <Description>
 Represents a link to a page containing an embedded video player or a video file. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.</Description>
-<Super>BaseType</Super>
+<Super>BaseInlineQuery</Super>
 <TimeCreated>64149,84146.077502</TimeCreated>
-
-<Property name="type">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="video_url">
 <Type>%String</Type>
@@ -54,14 +44,6 @@ Represents a link to a page containing an embedded video player or a video file.
 
 <Property name="description">
 <Type>%String</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>InlineKeyboardMarkup</Type>
-</Property>
-
-<Property name="input_message_content">
-<Type>%Object</Type>
 </Property>
 </Class>
 </Export>

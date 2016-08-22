@@ -36,24 +36,5 @@ Use this method to send answers to an inline query. On success, True is returned
 <Property name="switch_pm_parameter">
 <Type>%String</Type>
 </Property>
-
-<Parameter name="RETURN">
-<Default>%Boolean</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>inlineQueryId:%String,results:%ListOfObjects,cacheTime:%Integer,isPersonal:%Boolean,nextOffset:%String,switchPmText:%String,switchPmParameter:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."inline_query_id" = inlineQueryId
-    set ..results = results
-    set .."cache_time" = cacheTime
-    set .."is_personal" = isPersonal
-    set .."next_offset" = nextOffset
-    set .."switch_pm_text" = switchPmText
-    set .."switch_pm_parameter" = switchPmParameter
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

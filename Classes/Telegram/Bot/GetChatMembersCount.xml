@@ -11,18 +11,5 @@ Use this method to get the number of members in a chat. Returns Int on success.<
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-<Default>%Integer</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

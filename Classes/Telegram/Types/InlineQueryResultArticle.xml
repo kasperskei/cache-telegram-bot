@@ -3,31 +3,12 @@
 <Class name="Telegram.Types.InlineQueryResultArticle">
 <Description>
 Represents a link to an article or web page.</Description>
-<Super>BaseType</Super>
+<Super>BaseInlineQuery</Super>
 <TimeCreated>64149,84071.675511</TimeCreated>
-
-<Property name="type">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="title">
 <Type>%String</Type>
 <Required>1</Required>
-</Property>
-
-<Property name="input_message_content">
-<Type>%Object</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="reply_markup">
-<Type>InlineKeyboardMarkup</Type>
 </Property>
 
 <Property name="url">

@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.SendMessage">
-<Super>BaseRequest</Super>
+<Super>BaseSend</Super>
 <TimeCreated>64131,34890.694045</TimeCreated>
 <ClientName>sendMessage</ClientName>
-
-<Property name="chat_id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="text">
 <Type>%String</Type>
@@ -23,36 +18,5 @@
 <Property name="disable_web_page_preview">
 <Type>%Boolean</Type>
 </Property>
-
-<Property name="disable_notification">
-<Type>%Boolean</Type>
-</Property>
-
-<Property name="reply_to_message_id">
-<Type>%Integer</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>%String</Type>
-</Property>
-
-<Parameter name="RETURN">
-<Default>Message</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    set ..text = text
-    set .."parse_mode" = $Get(parseMode)
-    set .."disable_web_page_preview" = $Get(disableWebPagePreview)
-    set .."disable_notification" = $Get(disableNotification)
-    set .."reply_to_message_id" = $Get(replyToMessageId)
-    set .."reply_markup" = $Get(replyMarkup)
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

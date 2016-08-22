@@ -18,18 +18,5 @@ Type of action to broadcast. Choose one, depending on what the user is about to 
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,action:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    set ..action = action
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

@@ -11,18 +11,5 @@ Use this method to get basic info about a file and prepare it for downloading. F
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-<Default>File</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>fileId:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."file_id" = fileId
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

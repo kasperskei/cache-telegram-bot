@@ -3,7 +3,7 @@
 <Class name="Telegram.Bot.BaseRequest">
 <Abstract>1</Abstract>
 <IncludeCode>%occErrors,%occStatus</IncludeCode>
-<Super>%Base</Super>
+<Super>%RegisteredObject</Super>
 <TimeCreated>64131,31469.791982</TimeCreated>
 
 <Parameter name="RETURN">
@@ -11,7 +11,6 @@
 
 <Method name="SendWebRequest">
 <FormalSpec>settingsName:%String="default"</FormalSpec>
-<ReturnType>Telegram.Types.BaseType</ReturnType>
 <Implementation><![CDATA[
 	set settings = ##class(Settings).%OpenId(1)
 	set request = ##class(%Net.HttpRequest).%New()
@@ -21,7 +20,7 @@
 	set request.Location = settings.Token
 	set request.ContentType = "multipart/form-data; boundary="
 	try {
-		return ..SendWebRequestGeneratorTest(request)
+		return ..SendWebRequestGenerator(request)
 	}
 	catch ex {
 		if ex.%IsA("%Exception.SystemException") {
@@ -43,12 +42,11 @@
 <Method name="SendWebRequestGenerator">
 <CodeMode>objectgenerator</CodeMode>
 <FormalSpec>request:%Net.HttpRequest</FormalSpec>
-<ReturnType>Telegram.Types.BaseType</ReturnType>
 <Implementation><![CDATA[
 	do %code.WriteLine(" try {")
 	do %code.WriteLine(" set RootMIMEPart = ##class(%Net.MIMEPart).%New()")
 	
-	set properties = %class.Properties
+	set properties = %compiledclass.Properties
 	for i=1:1:properties.Count() {
 		set property = properties.GetAt(i)
 		do %code.WriteLine(" if (.."""_property.Name_""" '= """") {")
@@ -75,7 +73,53 @@
 		do %code.WriteLine(" do writer.WriteMIMEBody(RootMIMEPart)")
 	do %code.WriteLine(" }")
 	
-	set method = "/"_%class.ClientName
+	set method = "/"_%compiledclass.ClientName
+	
+	do %code.WriteLine(" set request.ContentType = ""multipart/form-data; boundary=""_RootMIMEPart.Boundary")
+	do %code.WriteLine(" do request.Get(request.Location_"""_method_""", 0)")
+	do %code.WriteLine(" do request.HttpResponse.OutputToDevice()")
+	
+	do %code.WriteLine(" return request.HttpResponse.Data")
+	do %code.WriteLine(" } catch { throw ex }")
+]]></Implementation>
+</Method>
+
+<Method name="SendWebRequestGeneratorOld">
+<CodeMode>objectgenerator</CodeMode>
+<FormalSpec>request:%Net.HttpRequest</FormalSpec>
+<ReturnType>Telegram.Types.BaseType</ReturnType>
+<Implementation><![CDATA[
+	do %code.WriteLine(" try {")
+	do %code.WriteLine(" set RootMIMEPart = ##class(%Net.MIMEPart).%New()")
+	
+	set properties = %compiledclass.Properties
+	for i=1:1:properties.Count() {
+		set property = properties.GetAt(i)
+		do %code.WriteLine(" if (.."""_property.Name_""" '= """") {")
+			do %code.WriteLine(" set contentdisp = ""form-data; name=""""" _ property.Name _ """""""")
+			do %code.WriteLine(" set MIMEPart = ##class(%Net.MIMEPart).%New()")
+			
+			do %code.WriteLine(" if $classname(..""" _ property.Name _ """) = ""%Library.FileBinaryStream"" {")
+				do %code.WriteLine(" set filename = ..""" _ property.Name _ """.Filename")
+				do %code.WriteLine(" set contentdisp = contentdisp _ ""; filename="""""" _ filename _ """"""""")
+				do %code.WriteLine(" set MIMEPart.Body = ..""" _ property.Name _ """")
+			do %code.WriteLine(" } else {")
+				do %code.WriteLine(" set MIMEPart.Body=##class(%GlobalCharacterStream).%New()")
+		    	do %code.WriteLine(" do MIMEPart.Body.Write($ZCONVERT(..""" _ property.Name _ """,""O"",""UTF8""))")
+			do %code.WriteLine(" }")
+			
+			do %code.WriteLine(" do MIMEPart.SetHeader(""Content-Disposition"", contentdisp)")
+			do %code.WriteLine(" do RootMIMEPart.Parts.Insert(MIMEPart)")
+		do %code.WriteLine(" }")
+	}
+	
+	do %code.WriteLine(" if RootMIMEPart.Parts.Count() '= 0 {")
+		do %code.WriteLine(" set writer = ##class(%Net.MIMEWriter).%New()")
+		do %code.WriteLine(" do writer.OutputToStream(request.EntityBody)")
+		do %code.WriteLine(" do writer.WriteMIMEBody(RootMIMEPart)")
+	do %code.WriteLine(" }")
+	
+	set method = "/"_%compiledclass.ClientName
 	set type = %parameter("RETURN")
 	
 	do %code.WriteLine(" set request.ContentType = ""multipart/form-data; boundary=""_RootMIMEPart.Boundary")

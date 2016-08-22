@@ -25,21 +25,5 @@ Use this method to forward messages of any kind. On success, the sent Message is
 <Type>%Integer</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-<Default>Message</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    set .."from_chat_id" = fromChatId
-    set .."disable_notification" = $Get(disableNotification)
-    set .."message_id" = messageId
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

@@ -16,19 +16,5 @@ Use this method to unban a previously kicked user in a supergroup. The user will
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-<Default>%Boolean</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,userId:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-	set .."user_id" = userId
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

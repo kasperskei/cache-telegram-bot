@@ -3,18 +3,8 @@
 <Class name="Telegram.Types.InlineQueryResultDocument">
 <Description>
 Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file. Currently, only .PDF and .ZIP files can be sent using this method.</Description>
-<Super>BaseType</Super>
+<Super>BaseInlineQuery</Super>
 <TimeCreated>64149,84296.891425</TimeCreated>
-
-<Property name="type">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="title">
 <Type>%String</Type>
@@ -37,14 +27,6 @@ Represents a link to a file. By default, this file will be sent by the user with
 
 <Property name="description">
 <Type>%String</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>InlineKeyboardMarkup</Type>
-</Property>
-
-<Property name="input_message_content">
-<Type>%Object</Type>
 </Property>
 
 <Property name="thumb_url">

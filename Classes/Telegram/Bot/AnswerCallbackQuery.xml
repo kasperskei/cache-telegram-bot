@@ -19,20 +19,5 @@ Use this method to send answers to callback queries sent from inline keyboards. 
 <Property name="show_alert">
 <Type>%Boolean</Type>
 </Property>
-
-<Parameter name="RETURN">
-<Default>%Boolean</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."callback_query_id" = callbackQueryId
-	set ..text = text
-	set .."show_alert" = showAlert
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

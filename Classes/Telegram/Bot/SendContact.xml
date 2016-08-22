@@ -3,14 +3,9 @@
 <Class name="Telegram.Bot.SendContact">
 <Description>
 Use this method to send phone contacts. On success, the sent Message is returned.</Description>
-<Super>BaseRequest</Super>
+<Super>BaseSend</Super>
 <TimeCreated>64146,42673.827647</TimeCreated>
 <ClientName>sendContact</ClientName>
-
-<Property name="chat_id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="phone_number">
 <Type>%String</Type>
@@ -25,36 +20,5 @@ Use this method to send phone contacts. On success, the sent Message is returned
 <Property name="last_name">
 <Type>%String</Type>
 </Property>
-
-<Property name="disable_notification">
-<Type>%Boolean</Type>
-</Property>
-
-<Property name="reply_to_message_id">
-<Type>%Integer</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>%String</Type>
-</Property>
-
-<Parameter name="RETURN">
-<Default>Message</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    set .."phone_number" = phoneNumber
-    set .."first_name" = $Get(firstName)
-    set .."last_name" = $Get(lastName)
-    set .."disable_notification" = $Get(disableNotification)
-    set .."reply_to_message_id" = $Get(replyToMessageId)
-    set .."reply_markup" = $Get(replyMarkup)
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

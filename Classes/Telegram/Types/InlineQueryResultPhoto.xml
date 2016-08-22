@@ -3,18 +3,8 @@
 <Class name="Telegram.Types.InlineQueryResultPhoto">
 <Description>
 Represents a link to a photo. By default, this photo will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.</Description>
-<Super>BaseType</Super>
+<Super>BaseInlineQuery</Super>
 <TimeCreated>64149,84145.532687</TimeCreated>
-
-<Property name="type">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="photo_url">
 <Type>%String</Type>
@@ -44,14 +34,6 @@ Represents a link to a photo. By default, this photo will be sent by the user wi
 
 <Property name="caption">
 <Type>%String</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>InlineKeyboardMarkup</Type>
-</Property>
-
-<Property name="input_message_content">
-<Type>%Object</Type>
 </Property>
 </Class>
 </Export>

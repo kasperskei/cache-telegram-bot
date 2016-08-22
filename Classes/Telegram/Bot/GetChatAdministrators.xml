@@ -11,18 +11,5 @@ Use this method to get a list of administrators in a chat. On success, returns a
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-<Default>%ListOfObjects</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

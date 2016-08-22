@@ -3,14 +3,9 @@
 <Class name="Telegram.Bot.SendVideo">
 <Description>
 Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.</Description>
-<Super>BaseRequest</Super>
+<Super>BaseSend</Super>
 <TimeCreated>64146,42594.912554</TimeCreated>
 <ClientName>sendVideo</ClientName>
-
-<Property name="chat_id">
-<Type>%String</Type>
-<Required>1</Required>
-</Property>
 
 <Property name="video">
 <Type>%String</Type>
@@ -32,38 +27,5 @@ Use this method to send video files, Telegram clients support mp4 videos (other 
 <Property name="caption">
 <Type>%String</Type>
 </Property>
-
-<Property name="disable_notification">
-<Type>%Boolean</Type>
-</Property>
-
-<Property name="reply_to_message_id">
-<Type>%Integer</Type>
-</Property>
-
-<Property name="reply_markup">
-<Type>%String</Type>
-</Property>
-
-<Parameter name="RETURN">
-<Default>Message</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    set ..video = video
-    set ..duration = $Get(duration)
-    set ..width = $Get(width)
-    set ..height = $Get(height)
-    set ..caption = $Get(caption)
-    set .."disable_notification" = $Get(disableNotification)
-    set .."reply_to_message_id" = $Get(replyToMessageId)
-    set .."reply_markup" = $Get(replyMarkup)
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>

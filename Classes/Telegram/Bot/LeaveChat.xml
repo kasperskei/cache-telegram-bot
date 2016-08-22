@@ -11,18 +11,5 @@ Use this method for your bot to leave a group, supergroup or channel. Returns Tr
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
-
-<Parameter name="RETURN">
-<Default>%Boolean</Default>
-</Parameter>
-
-<Method name="%OnNew">
-<FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set .."chat_id" = chatId
-    return $$$OK
-]]></Implementation>
-</Method>
 </Class>
 </Export>
