@@ -7,16 +7,16 @@
 <TimeCreated>64131,31469.791982</TimeCreated>
 
 <Method name="SendWebRequest">
-<FormalSpec>settingsName:%String="default"</FormalSpec>
 <Implementation><![CDATA[
-	set settings = ##class(Settings).%OpenId(1)
-	set request = ##class(%Net.HttpRequest).%New()
-	set request.Https = settings.Https
-	set request.SSLConfiguration = settings.SSLConfiguration
-	set request.Server = settings.Server
-	set request.Location = settings.Token
-	set request.ContentType = "multipart/form-data; boundary="
 	try {
+		set settings = ##class(Telegram.Bot.Settings).%New()
+		set request = ##class(%Net.HttpRequest).%New()
+		set request.ContentType = "multipart/form-data; boundary="
+		set request.Server = "api.telegram.org"
+		set request.Https = $$$YES
+		set request.SSLConfiguration = settings.GetValue("ssl")
+		set request.Location = settings.GetValue("token")
+		
 		return ..SendWebRequestGenerator(request)
 	}
 	catch ex {

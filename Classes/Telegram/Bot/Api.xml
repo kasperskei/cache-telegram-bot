@@ -67,7 +67,7 @@
 	set response = deserializer.Deserialize(api.SendWebRequest())
 		
 	if (response.ok) {
-		if response.result = $$$OK
+		if response.result
 			set response.result = response.result.Convert("%Boolean")
 		else
 			set response.result = response.result.Convert("Telegram.Types.Message")
@@ -90,7 +90,7 @@
 	set response = deserializer.Deserialize(api.SendWebRequest())
 		
 	if (response.ok) {
-		if response.result = $$$OK
+		if response.result
 			set response.result = response.result.Convert("%Boolean")
 		else
 			set response.result = response.result.Convert("Telegram.Types.Message")
@@ -116,7 +116,7 @@
 	set response = deserializer.Deserialize(api.SendWebRequest())
 		
 	if (response.ok) {
-		if response.result = $$$OK
+		if response.result
 			set response.result = response.result.Convert("%Boolean")
 		else
 			set response.result = response.result.Convert("Telegram.Types.Message")
