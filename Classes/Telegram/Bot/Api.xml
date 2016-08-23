@@ -53,6 +53,79 @@
 ]]></Implementation>
 </Method>
 
+<Method name="EditMessageCaption">
+<FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,caption:%String,replyMarkup:%String</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.EditMessageCaption).%New()
+	set api."chat_id" = $Get(chatId)
+    set api."message_id" = $Get(messageId)
+    set api."inline_message_id" = $Get(inlineMessageId)
+    set api.caption = $Get(caption)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		if response.result = $$$OK
+			set response.result = response.result.Convert("%Boolean")
+		else
+			set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="EditMessageReplyMarkup">
+<FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,replyMarkup:%String</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.EditMessageReplyMarkup).%New()
+	set api."chat_id" = $Get(chatId)
+    set api."message_id" = $Get(messageId)
+    set api."inline_message_id" = $Get(inlineMessageId)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		if response.result = $$$OK
+			set response.result = response.result.Convert("%Boolean")
+		else
+			set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
+<Method name="EditMessageText">
+<FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,replyMarkup:%String</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.EditMessageText).%New()
+	set api."chat_id" = $Get(chatId)
+    set api."message_id" = $Get(messageId)
+    set api."inline_message_id" = $Get(inlineMessageId)
+    set api.text = text
+    set api."parse_mode" = $Get(parseMode)
+    set api."disable_web_page_preview" = $Get(disableWebPagePreview)
+    set api."reply_markup" = $Get(replyMarkup)
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(api.SendWebRequest())
+		
+	if (response.ok) {
+		if response.result = $$$OK
+			set response.result = response.result.Convert("%Boolean")
+		else
+			set response.result = response.result.Convert("Telegram.Types.Message")
+	}
+
+	return response.Convert("Telegram.Types.ApiResponse")
+]]></Implementation>
+</Method>
+
 <Method name="ForwardMessage">
 <FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
 <Implementation><![CDATA[
