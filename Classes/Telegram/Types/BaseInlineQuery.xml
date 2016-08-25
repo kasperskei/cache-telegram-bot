@@ -15,7 +15,7 @@
 </Property>
 
 <Property name="reply_markup">
-<Type>InlineKeyboardMarkup</Type>
+<Type>Telegram.Types.InlineKeyboardMarkup</Type>
 </Property>
 
 <Property name="input_message_content">

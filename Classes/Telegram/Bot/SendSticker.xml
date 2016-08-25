@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.SendSticker">
-<Description>
-Use this method to send .webp stickers. On success, the sent Message is returned.</Description>
 <Super>BaseSend</Super>
 <TimeCreated>64146,42579.290185</TimeCreated>
 <ClientName>sendSticker</ClientName>

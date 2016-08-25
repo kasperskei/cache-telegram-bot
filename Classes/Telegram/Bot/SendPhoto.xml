@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.SendPhoto">
-<Description>
-Use this method to send photos. On success, the sent Message is returned.</Description>
 <Super>BaseSend</Super>
 <TimeCreated>64141,67315.754015</TimeCreated>
 <ClientName>sendPhoto</ClientName>

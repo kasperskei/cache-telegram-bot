@@ -20,18 +20,7 @@
 		return ..SendWebRequestGenerator(request)
 	}
 	catch ex {
-		if ex.%IsA("%Exception.SystemException") {
-			w "System exception",!
-			w "Name: ",$ZCVT(ex.Name,"O","HTML"),!
-			w "Location: ",ex.Location,!
-			w "Code: ",ex.Code,!
-			w "Data: ",ex.Data,!!
-		}
-		else {
-			w "No system exception",!
-			w ex.AsStatus(),!
-			w ex.DisplayString(),!
-		}
+		throw ex
 	}
 ]]></Implementation>
 </Method>
@@ -40,7 +29,6 @@
 <CodeMode>objectgenerator</CodeMode>
 <FormalSpec>request:%Net.HttpRequest</FormalSpec>
 <Implementation><![CDATA[
-	do %code.WriteLine(" try {")
 	do %code.WriteLine(" set RootMIMEPart = ##class(%Net.MIMEPart).%New()")
 	
 	set properties = %compiledclass.Properties
@@ -77,7 +65,6 @@
 	do %code.WriteLine(" do request.HttpResponse.OutputToDevice()")
 	
 	do %code.WriteLine(" return request.HttpResponse.Data")
-	do %code.WriteLine(" } catch { throw ex }")
 ]]></Implementation>
 </Method>
 

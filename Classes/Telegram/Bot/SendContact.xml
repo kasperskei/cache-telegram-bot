@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.SendContact">
-<Description>
-Use this method to send phone contacts. On success, the sent Message is returned.</Description>
 <Super>BaseSend</Super>
 <TimeCreated>64146,42673.827647</TimeCreated>
 <ClientName>sendContact</ClientName>

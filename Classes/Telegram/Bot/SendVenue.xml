@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.SendVenue">
-<Description>
-Use this method to send information about a venue. On success, the sent Message is returned.</Description>
 <Super>BaseSend</Super>
 <TimeCreated>64146,42656.656701</TimeCreated>
 <ClientName>sendVenue</ClientName>

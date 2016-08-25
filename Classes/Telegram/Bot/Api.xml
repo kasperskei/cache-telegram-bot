@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.Api">
+<IncludeCode>Src.Utils.Macro</IncludeCode>
 <Super>%RegisteredObject</Super>
 <TimeCreated>64152,43802.402025</TimeCreated>
 
 <Method name="AnswerCallbackQuery">
+<Description>
+Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.</Description>
 <FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.AnswerCallbackQuery).%New()
@@ -23,14 +26,9 @@
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ToDo Convert result Array of InlineQueryResult
-
-]]></Content>
-</UDLText>
-
 <Method name="AnswerInlineQuery">
+<Description>
+Use this method to send answers to an inline query. On success, True is returned.</Description>
 <FormalSpec>inlineQueryId:%String,results:%ListOfObjects,cacheTime:%Integer,isPersonal:%Boolean,nextOffset:%String,switchPmText:%String,switchPmParameter:%String</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.AnswerInlineQuery).%New()
@@ -54,6 +52,8 @@
 </Method>
 
 <Method name="EditMessageCaption">
+<Description>
+Use this method to edit captions of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.</Description>
 <FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,caption:%String,replyMarkup:%String</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.EditMessageCaption).%New()
@@ -78,6 +78,8 @@
 </Method>
 
 <Method name="EditMessageReplyMarkup">
+<Description>
+Use this method to edit only the reply markup of messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.</Description>
 <FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,replyMarkup:%String</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.EditMessageReplyMarkup).%New()
@@ -101,6 +103,8 @@
 </Method>
 
 <Method name="EditMessageText">
+<Description>
+Use this method to edit text messages sent by the bot or via the bot (for inline bots). On success, if edited message is sent by the bot, the edited Message is returned, otherwise True is returned.</Description>
 <FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,replyMarkup:%String</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.EditMessageText).%New()
@@ -127,6 +131,8 @@
 </Method>
 
 <Method name="ForwardMessage">
+<Description>
+Use this method to forward messages of any kind. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.ForwardMessage).%New()
@@ -147,6 +153,8 @@
 </Method>
 
 <Method name="GetChat">
+<Description>
+Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.</Description>
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -164,14 +172,9 @@
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ToDo Convert Array of ChatMember
-
-]]></Content>
-</UDLText>
-
 <Method name="GetChatAdministrators">
+<Description>
+Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.</Description>
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -182,7 +185,14 @@
 	set response = deserializer.Deserialize(api.SendWebRequest())
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("%ListOfObjects")
+		set result = ##class(%ListOfObjects).%New()
+
+		set iter = response.result.$getIterator()
+   		while iter.$getNext(.key , .value) {
+	   		$$$do(result.Insert(value.Convert("Telegram.Types.ChatMember")))
+   		}
+		
+		set response.result = response
 	}
 
 	return response.Convert("Telegram.Types.ApiResponse")
@@ -190,6 +200,8 @@
 </Method>
 
 <Method name="GetChatMember">
+<Description>
+Use this method to get information about a member of a chat. Returns a ChatMember object on success.</Description>
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -209,6 +221,8 @@
 </Method>
 
 <Method name="GetChatMembersCount">
+<Description>
+Use this method to get the number of members in a chat. Returns Int on success.</Description>
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -227,6 +241,8 @@
 </Method>
 
 <Method name="GetFile">
+<Description><![CDATA[
+Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.]]></Description>
 <FormalSpec>fileId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -245,6 +261,8 @@
 </Method>
 
 <Method name="GetMe">
+<Description>
+A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.</Description>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.GetMe).%New()
@@ -260,27 +278,29 @@
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ToDo convert Array of Update
-
-]]></Content>
-</UDLText>
-
 <Method name="GetUpdates">
+<Description>
+Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned.</Description>
 <FormalSpec>offset:%Integer,limit:%Integer,timeout:%Integer</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetMe).%New()
-    set api.offset = offset
-    set api.limit = limit
-    set api.timeout = timeout
+	set api = ##class(Telegram.Bot.GetUpdates).%New()
+    set api.offset = $Get(offset)
+    set api.limit = $Get(limit)
+    set api.timeout = $Get(timeout)
     
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(api.SendWebRequest())
-		
+	
 	if (response.ok) {
-		set response.result = response.result.Convert("%ListOfObjects")
+		set result = ##class(%ListOfObjects).%New()
+
+		set iter = response.result.$getIterator()
+   		while iter.$getNext(.key , .value) {
+	   		$$$do(result.Insert(value.Convert("Telegram.Types.Update")))
+   		}
+		
+		set response.result = response
 	}
 
 	return response.Convert("Telegram.Types.ApiResponse")
@@ -288,13 +308,15 @@
 </Method>
 
 <Method name="GetUserProfilePhotos">
+<Description>
+Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.</Description>
 <FormalSpec>chatId:%String,offset:%Integer,limit:%Integer</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.GetUserProfilePhotos).%New()
 	set api."chat_id" = chatId
-    set api.offset = offset
-    set api.limit = limit
+    set api.offset = $Get(offset)
+    set api.limit = $Get(limit)
     
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(api.SendWebRequest())
@@ -308,6 +330,8 @@
 </Method>
 
 <Method name="KickChatMember">
+<Description>
+Use this method to kick a user from a group or a supergroup. In the case of supergroups, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the group for this to work. Returns True on success.</Description>
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -327,6 +351,8 @@
 </Method>
 
 <Method name="LeaveChat">
+<Description>
+Use this method for your bot to leave a group, supergroup or channel. Returns True on success.</Description>
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -345,6 +371,8 @@
 </Method>
 
 <Method name="SendAudio">
+<Description>
+Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <FormalSpec>chatId:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -369,6 +397,8 @@
 </Method>
 
 <Method name="SendChatAction">
+<Description>
+Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). </Description>
 <FormalSpec>chatId:%String,action:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -384,6 +414,8 @@
 </Method>
 
 <Method name="SendContact">
+<Description>
+Use this method to send phone contacts. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -407,6 +439,8 @@
 </Method>
 
 <Method name="SendDocument">
+<Description>
+Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.</Description>
 <FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -430,6 +464,8 @@
 </Method>
 
 <Method name="SendLocation">
+<Description>
+Use this method to send point on the map. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,latitude:%Float,longitude:%Float,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -453,6 +489,8 @@
 </Method>
 
 <Method name="SendMessage">
+<Description>
+Use this method to send text messages. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -477,6 +515,8 @@
 </Method>
 
 <Method name="SendPhoto">
+<Description>
+Use this method to send photos. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,photo:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -500,6 +540,8 @@
 </Method>
 
 <Method name="SendSticker">
+<Description>
+Use this method to send .webp stickers. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -522,6 +564,8 @@
 </Method>
 
 <Method name="SendVenue">
+<Description>
+Use this method to send information about a venue. On success, the sent Message is returned.</Description>
 <FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -548,6 +592,8 @@
 </Method>
 
 <Method name="SendVideo">
+<Description>
+Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -574,6 +620,8 @@
 </Method>
 
 <Method name="SendVoice">
+<Description>
+Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.</Description>
 <FormalSpec>chatId:%String,voice:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -597,6 +645,8 @@
 </Method>
 
 <Method name="SetWebhook">
+<Description>
+Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts.</Description>
 <FormalSpec>url:%String,certificate:%FileBinaryStream</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[
@@ -612,6 +662,8 @@
 </Method>
 
 <Method name="UnbanChatMember">
+<Description>
+Use this method to unban a previously kicked user in a supergroup. The user will not return to the group automatically, but will be able to join via link, etc. The bot must be an administrator in the group for this to work. Returns True on success.</Description>
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
 <ReturnType>Telegram.Types.ApiResponse</ReturnType>
 <Implementation><![CDATA[

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.AnswerCallbackQuery">
-<Description>
-Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64146,74855.821137</TimeCreated>
 <ClientName>answerCallbackQuery</ClientName>

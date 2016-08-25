@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.GetUserProfilePhotos">
-<Description>
-Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64146,73033.032955</TimeCreated>
 <ClientName>getUserProfilePhotos</ClientName>

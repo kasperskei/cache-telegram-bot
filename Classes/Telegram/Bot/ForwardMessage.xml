@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.ForwardMessage">
-<Description>
-Use this method to forward messages of any kind. On success, the sent Message is returned.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64141,62115.002663</TimeCreated>
 <ClientName>forwardMessage</ClientName>

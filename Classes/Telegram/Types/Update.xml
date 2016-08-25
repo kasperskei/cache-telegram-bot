@@ -8,28 +8,28 @@ Only one of the optional parameters can be present in any given update.</Descrip
 <TimeCreated>64146,76132.226171</TimeCreated>
 
 <Property name="update_id">
-<Type>%Integer</Type>
+<Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="message">
-<Type>Message</Type>
+<Type>Telegram.Types.Message</Type>
 </Property>
 
 <Property name="edited_message">
-<Type>Message</Type>
+<Type>Telegram.Types.Message</Type>
 </Property>
 
 <Property name="inline_query">
-<Type>InlineQuery</Type>
+<Type>Telegram.Types.InlineQuery</Type>
 </Property>
 
 <Property name="chosen_inline_result">
-<Type>ChosenInlineResult</Type>
+<Type>Telegram.Types.ChosenInlineResult</Type>
 </Property>
 
 <Property name="callback_query">
-<Type>CallbackQuery</Type>
+<Type>Telegram.Types.CallbackQuery</Type>
 </Property>
 </Class>
 </Export>

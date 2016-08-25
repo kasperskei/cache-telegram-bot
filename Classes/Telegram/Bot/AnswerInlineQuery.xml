@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.AnswerInlineQuery">
-<Description>
-Use this method to send answers to an inline query. On success, True is returned.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64146,80745.888485</TimeCreated>
 <ClientName>answerInlineQuery</ClientName>

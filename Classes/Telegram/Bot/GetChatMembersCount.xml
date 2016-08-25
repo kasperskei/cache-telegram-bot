@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.GetChatMembersCount">
-<Description>
-Use this method to get the number of members in a chat. Returns Int on success.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64146,74270.1984</TimeCreated>
 <ClientName>getChatMembersCount</ClientName>

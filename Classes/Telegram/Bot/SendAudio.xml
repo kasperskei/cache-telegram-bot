@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.SendAudio">
-<Description>
-Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <Super>BaseSend</Super>
 <TimeCreated>64146,42544.541727</TimeCreated>
 <ClientName>sendAudio</ClientName>

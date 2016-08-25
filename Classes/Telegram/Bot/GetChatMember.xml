@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.GetChatMember">
-<Description>
-Use this method to get information about a member of a chat. Returns a ChatMember object on success.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64146,74342.289793</TimeCreated>
 <ClientName>getChatMember</ClientName>

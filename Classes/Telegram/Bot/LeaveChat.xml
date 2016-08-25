@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Bot.LeaveChat">
-<Description>
-Use this method for your bot to leave a group, supergroup or channel. Returns True on success.</Description>
 <Super>BaseRequest</Super>
 <TimeCreated>64146,73837.836757</TimeCreated>
 <ClientName>leaveChat</ClientName>
