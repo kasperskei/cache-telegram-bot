@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.Handler">
+<Abstract>1</Abstract>
+<Super>%RegisteredObject</Super>
+<TimeCreated>64156,43314.243618</TimeCreated>
+
+<Method name="OnUpdate">
+<Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>update:Telegram.Types.Update</FormalSpec>
+</Method>
+
+<Method name="SetLocalhook">
+<FormalSpec>interval:%Float=1,isActive:%Boolean=1</FormalSpec>
+<Implementation><![CDATA[
+	set ^intervalUpdate = interval
+	
+	if $Get(^lastUpdateId) && ^isActiveOnUpdate = 1 && isActive = 1 return
+	if '$Get(^lastUpdateId) set ^lastUpdateId = 0
+	
+	set ^isActiveOnUpdate = isActive
+	job ..GetUpdates()
+]]></Implementation>
+</Method>
+
+<Method name="GetUpdates">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.Api).%New()
+	while ^isActiveOnUpdate {		
+		set response = api.GetUpdates()
+		
+		for i = 1:1:response.result.Count() {
+			if response.result.GetAt(i)."update_id" > ^lastUpdateId {
+				job ..OnUpdate(response.result.GetAt(i))
+				set ^lastUpdateId = response.result.GetAt(i)."update_id"
+			}
+		}
+
+		HANG ^intervalUpdate
+	}
+	set ^isActiveOnUpdate = 0
+]]></Implementation>
+</Method>
+</Class>
+</Export>
