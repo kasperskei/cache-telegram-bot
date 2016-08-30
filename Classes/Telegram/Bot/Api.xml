@@ -116,7 +116,7 @@ Use this method to send answers to callback queries sent from inline keyboards. 
 <ClassMethod>1</ClassMethod>
 <FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.AnswerCallbackQuery).%New()
+	set api = ##class(Telegram.DTO.Request.AnswerCallbackQuery).%New()
 	set api."callback_query_id" = callbackQueryId
 	set api.text = $Get(text)
 	set api."show_alert" = $Get(showAlert)
@@ -138,7 +138,7 @@ Use this method to send answers to an inline query. On success, True is returned
 <ClassMethod>1</ClassMethod>
 <FormalSpec>inlineQueryId:%String,results:%ListOfObjects,cacheTime:%Integer,isPersonal:%Boolean,nextOffset:%String,switchPmText:%String,switchPmParameter:%String</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.AnswerInlineQuery).%New()
+	set api = ##class(Telegram.DTO.Request.AnswerInlineQuery).%New()
 	set api."inline_query_id" = inlineQueryId
     set api.results = results
     set api."cache_time" = $Get(cacheTime)
@@ -164,7 +164,7 @@ Use this method to edit captions of messages sent by the bot or via the bot (for
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,caption:%String,replyMarkup:%String</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.EditMessageCaption).%New()
+	set api = ##class(Telegram.DTO.Request.EditMessageCaption).%New()
 	set api."chat_id" = $Get(chatId)
     set api."message_id" = $Get(messageId)
     set api."inline_message_id" = $Get(inlineMessageId)
@@ -191,7 +191,7 @@ Use this method to edit only the reply markup of messages sent by the bot or via
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,replyMarkup:%String</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.EditMessageReplyMarkup).%New()
+	set api = ##class(Telegram.DTO.Request.EditMessageReplyMarkup).%New()
 	set api."chat_id" = $Get(chatId)
     set api."message_id" = $Get(messageId)
     set api."inline_message_id" = $Get(inlineMessageId)
@@ -217,7 +217,7 @@ Use this method to edit text messages sent by the bot or via the bot (for inline
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,messageId:%String,inlineMessageId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,replyMarkup:%String</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.EditMessageText).%New()
+	set api = ##class(Telegram.DTO.Request.EditMessageText).%New()
 	set api."chat_id" = $Get(chatId)
     set api."message_id" = $Get(messageId)
     set api."inline_message_id" = $Get(inlineMessageId)
@@ -246,7 +246,7 @@ Use this method to forward messages of any kind. On success, the sent Message is
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.ForwardMessage).%New()
+	set api = ##class(Telegram.DTO.Request.ForwardMessage).%New()
 	set api."chat_id" = chatId
     set api."from_chat_id" = fromChatId
     set api."disable_notification" = $Get(disableNotification)
@@ -270,7 +270,7 @@ Use this method to get up to date information about the chat (current name of th
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetChat).%New()
+	set api = ##class(Telegram.DTO.Request.GetChat).%New()
 	set api."chat_id" = chatId
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
@@ -291,7 +291,7 @@ Use this method to get a list of administrators in a chat. On success, returns a
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetChatAdministrators).%New()
+	set api = ##class(Telegram.DTO.Request.GetChatAdministrators).%New()
 	set api."chat_id" = chatId
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
@@ -319,7 +319,7 @@ Use this method to get information about a member of a chat. Returns a ChatMembe
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetChatMember).%New()
+	set api = ##class(Telegram.DTO.Request.GetChatMember).%New()
 	set api."chat_id" = chatId
 	set api."user_id" = userId
 	
@@ -341,7 +341,7 @@ Use this method to get the number of members in a chat. Returns Int on success.<
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetChatMembersCount).%New()
+	set api = ##class(Telegram.DTO.Request.GetChatMembersCount).%New()
 	set api."chat_id" = chatId
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
@@ -362,7 +362,7 @@ Use this method to get basic info about a file and prepare it for downloading. F
 <FormalSpec>fileId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetFile).%New()
+	set api = ##class(Telegram.DTO.Request.GetFile).%New()
 	set api."file_id" = fileId
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
@@ -382,7 +382,7 @@ A simple method for testing your bot's auth token. Requires no parameters. Retur
 <ClassMethod>1</ClassMethod>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetMe).%New()
+	set api = ##class(Telegram.DTO.Request.GetMe).%New()
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("getMe", api.GenerateMultiformData()))
@@ -402,7 +402,7 @@ Use this method to receive incoming updates using long polling (wiki). An Array 
 <FormalSpec>offset:%Integer,limit:%Integer,timeout:%Integer</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetUpdates).%New()
+	set api = ##class(Telegram.DTO.Request.GetUpdates).%New()
     set api.offset = $Get(offset)
     set api.limit = $Get(limit)
     set api.timeout = $Get(timeout)
@@ -432,7 +432,7 @@ Use this method to get a list of profile pictures for a user. Returns a UserProf
 <FormalSpec>chatId:%String,offset:%Integer,limit:%Integer</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.GetUserProfilePhotos).%New()
+	set api = ##class(Telegram.DTO.Request.GetUserProfilePhotos).%New()
 	set api."chat_id" = chatId
     set api.offset = $Get(offset)
     set api.limit = $Get(limit)
@@ -455,7 +455,7 @@ Use this method to kick a user from a group or a supergroup. In the case of supe
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.KickChatMember).%New()
+	set api = ##class(Telegram.DTO.Request.KickChatMember).%New()
 	set api."chat_id" = chatId
 	set api."user_id" = userId
     
@@ -477,7 +477,7 @@ Use this method for your bot to leave a group, supergroup or channel. Returns Tr
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.LeaveChat).%New()
+	set api = ##class(Telegram.DTO.Request.LeaveChat).%New()
 	set api."chat_id" = chatId
     
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
@@ -498,7 +498,7 @@ Use this method to send audio files, if you want Telegram clients to display the
 <FormalSpec>chatId:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendAudio).%New()
+	set api = ##class(Telegram.DTO.Request.SendAudio).%New()
 	set api."chat_id" = chatId
 	set api.duration = $Get(duration)
 	set api.performer = $Get(performer)
@@ -525,7 +525,7 @@ Use this method when you need to tell the user that something is happening on th
 <FormalSpec>chatId:%String,action:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendChatAction).%New()
+	set api = ##class(Telegram.DTO.Request.SendChatAction).%New()
 	set api."chat_id" = chatId
     set api.action = action
     
@@ -543,7 +543,7 @@ Use this method to send phone contacts. On success, the sent Message is returned
 <FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendContact).%New()
+	set api = ##class(Telegram.DTO.Request.SendContact).%New()
     set api."phone_number" = phoneNumber
     set api."first_name" = $Get(firstName)
     set api."last_name" = $Get(lastName)
@@ -569,7 +569,7 @@ Use this method to send general files. On success, the sent Message is returned.
 <FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendDocument).%New()
+	set api = ##class(Telegram.DTO.Request.SendDocument).%New()
     set api."chat_id" = chatId
     set api.document = document
     set api.caption = $Get(caption)
@@ -595,7 +595,7 @@ Use this method to send point on the map. On success, the sent Message is return
 <FormalSpec>chatId:%String,latitude:%Float,longitude:%Float,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendLocation).%New()
+	set api = ##class(Telegram.DTO.Request.SendLocation).%New()
 	set api."chat_id" = chatId
     set api.latitude = latitude
     set api.longitude = longitude
@@ -621,7 +621,7 @@ Use this method to send text messages. On success, the sent Message is returned.
 <FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendMessage).%New()
+	set api = ##class(Telegram.DTO.Request.SendMessage).%New()
 	set api."chat_id" = chatId
     set api.text = text
     set api."parse_mode" = $Get(parseMode)
@@ -648,7 +648,7 @@ Use this method to send photos. On success, the sent Message is returned.</Descr
 <FormalSpec>chatId:%String,photo:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendPhoto).%New()
+	set api = ##class(Telegram.DTO.Request.SendPhoto).%New()
 	set api."chat_id" = chatId
     set api.photo = photo
     set api.caption = $Get(caption)
@@ -674,7 +674,7 @@ Use this method to send .webp stickers. On success, the sent Message is returned
 <FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendSticker).%New()
+	set api = ##class(Telegram.DTO.Request.SendSticker).%New()
 	set api."chat_id" = chatId
     set api.sticker = sticker
     set api."disable_notification" = $Get(disableNotification)
@@ -699,7 +699,7 @@ Use this method to send information about a venue. On success, the sent Message 
 <FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendVenue).%New()
+	set api = ##class(Telegram.DTO.Request.SendVenue).%New()
 	set api."chat_id" = chatId
     set api.latitude = latitude
     set api.longitude = longitude
@@ -728,7 +728,7 @@ Use this method to send video files, Telegram clients support mp4 videos (other 
 <FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendVideo).%New()
+	set api = ##class(Telegram.DTO.Request.SendVideo).%New()
 	set api."chat_id" = chatId
     set api.video = video
     set api.duration = $Get(duration)
@@ -757,7 +757,7 @@ Use this method to send audio files, if you want Telegram clients to display the
 <FormalSpec>chatId:%String,voice:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SendVoice).%New()
+	set api = ##class(Telegram.DTO.Request.SendVoice).%New()
 	set api."chat_id" = chatId
     set api.voice= voice
     set api.duration = $Get(duration)
@@ -783,7 +783,7 @@ Use this method to specify a url and receive incoming updates via an outgoing we
 <FormalSpec>url:%String,certificate:%FileBinaryStream</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.SetWebhook).%New()
+	set api = ##class(Telegram.DTO.Request.SetWebhook).%New()
 	set api.url = url
     set api.certificate = certificate
 	
@@ -801,7 +801,7 @@ Use this method to unban a previously kicked user in a supergroup. The user will
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.UnbanChatMember).%New()
+	set api = ##class(Telegram.DTO.Request.UnbanChatMember).%New()
 	set api."chat_id" = chatId
 	set api."user_id" = userId
 	
