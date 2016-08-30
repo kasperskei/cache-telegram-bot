@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.BaseRequest">
+<Abstract>1</Abstract>
+<IncludeCode>%occErrors,%occStatus,Src.Utils.Macro</IncludeCode>
+<Super>%RegisteredObject</Super>
+<TimeCreated>64160,76434.452992</TimeCreated>
+
+<Method name="GenerateMultiformData">
+<CodeMode>objectgenerator</CodeMode>
+<ReturnType>%Net.MIMEPart</ReturnType>
+<Implementation><![CDATA[
+	do %code.WriteLine(" set RootMIMEPart = ##class(%Net.MIMEPart).%New()")
+	
+	set properties = %compiledclass.Properties
+	for i=1:1:properties.Count() {
+		set property = properties.GetAt(i)
+		do %code.WriteLine(" if (.."""_property.Name_""" '= """") {")
+			do %code.WriteLine(" set contentdisp = ""form-data; name=""""" _ property.Name _ """""""")
+			do %code.WriteLine(" set MIMEPart = ##class(%Net.MIMEPart).%New()")
+			
+			do %code.WriteLine(" if $classname(..""" _ property.Name _ """) = ""%Library.FileBinaryStream"" {")
+				do %code.WriteLine(" set filename = ..""" _ property.Name _ """.Filename")
+				do %code.WriteLine(" set contentdisp = contentdisp _ ""; filename="""""" _ filename _ """"""""")
+				do %code.WriteLine(" set MIMEPart.Body = ..""" _ property.Name _ """")
+			do %code.WriteLine(" } else {")
+				do %code.WriteLine(" set MIMEPart.Body=##class(%GlobalCharacterStream).%New()")
+		    	do %code.WriteLine(" $$$do(MIMEPart.Body.Write($ZCONVERT(..""" _ property.Name _ """,""O"",""UTF8"")))")
+			do %code.WriteLine(" }")
+			
+			do %code.WriteLine(" $$$do(MIMEPart.SetHeader(""Content-Disposition"", contentdisp))")
+			do %code.WriteLine(" $$$do(RootMIMEPart.Parts.Insert(MIMEPart))")
+		do %code.WriteLine(" }")
+	}
+	
+	do %code.WriteLine(" return RootMIMEPart")
+]]></Implementation>
+</Method>
+</Class>
+</Export>

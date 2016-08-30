@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25">
-<Class name="Telegram.Bot.GetMe">
-<Super>BaseRequest</Super>
-<TimeCreated>64131,32502.562526</TimeCreated>
-<ClientName>getMe</ClientName>
-</Class>
-</Export>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Response.InlineQueryResultVideo">
+<Description>
+Represents a link to a page containing an embedded video player or a video file. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the video.</Description>
+<Super>BaseInlineQuery</Super>
+<TimeCreated>64149,84146.077502</TimeCreated>
+
+<Property name="video_url">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="mime_type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="thumb_url">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+
+<Property name="video_width">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="video_height">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="video_duration">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="description">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

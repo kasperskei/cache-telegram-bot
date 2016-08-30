@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.AbstractBroker">
+<Abstract>1</Abstract>
+<Super>%CSP.REST</Super>
+<TimeCreated>64160,78369.522889</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+ <Route Url="/:token" Method="POST" Call="Test"/>
+ </Routes>
+]]></Data>
+</XData>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>token:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	if token '= ##class(Telegram.Bot.Settings).GetValue("token")
+		return $$$NO
+	
+	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
+	set response = deserializer.Deserialize(%request.Content)
+	set update = response.Convert("Telegram.DTO.Response.Update")	
+	set handler = ..GetHandlerFactory()
+	
+	do ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)
+
+    return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetHandlerFactory">
+<ClassMethod>1</ClassMethod>
+<ReturnType>Telegram.Bot.AbstractHandler</ReturnType>
+</Method>
+</Class>
+</Export>

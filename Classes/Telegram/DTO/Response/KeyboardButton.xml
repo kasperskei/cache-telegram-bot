@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Response.KeyboardButton">
+<Super>BaseType</Super>
+<TimeCreated>64130,63202.533805</TimeCreated>
+
+<Property name="text">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="request_contact">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="request_location">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

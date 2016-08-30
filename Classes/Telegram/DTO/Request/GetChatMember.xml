@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.GetChatMember">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73681.137477</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="user_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

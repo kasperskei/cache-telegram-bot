@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.SendMessage">
+<Super>BaseSend</Super>
+<TimeCreated>64131,34890.694045</TimeCreated>
+
+<Property name="text">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="parse_mode">
+<Type>%String</Type>
+<Parameter name="VALUELIST" value=",Markdown,HTML"/>
+</Property>
+
+<Property name="disable_web_page_preview">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

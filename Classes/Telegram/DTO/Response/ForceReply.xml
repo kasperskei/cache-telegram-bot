@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Response.ForceReply">
+<Super>BaseType</Super>
+<TimeCreated>64130,63203.472141</TimeCreated>
+
+<Property name="force_reply">
+<Type>%Boolean</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="selective">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

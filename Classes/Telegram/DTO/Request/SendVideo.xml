@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.SendVideo">
+<Super>BaseSend</Super>
+<TimeCreated>64160,74097.385313</TimeCreated>
+
+<Property name="video">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="duration">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="width">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="height">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

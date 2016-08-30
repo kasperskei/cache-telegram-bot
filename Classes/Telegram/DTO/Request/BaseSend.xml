@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.BaseSend">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,76448.634891</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="reply_to_message_id">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

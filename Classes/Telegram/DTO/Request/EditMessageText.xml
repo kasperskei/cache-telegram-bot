@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.EditMessageText">
+<Super>BaseEditMessage</Super>
+<TimeCreated>64160,73620.898655</TimeCreated>
+
+<Property name="text">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="parse_mode">
+<Type>%String</Type>
+</Property>
+
+<Property name="disable_web_page_preview">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

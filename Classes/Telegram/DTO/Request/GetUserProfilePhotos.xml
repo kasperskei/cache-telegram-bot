@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.GetUserProfilePhotos">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73750.798062</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="offset">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="limit">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

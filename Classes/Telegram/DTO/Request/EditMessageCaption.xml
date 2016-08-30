@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.EditMessageCaption">
+<Super>BaseEditMessage</Super>
+<TimeCreated>64160,73593.226017</TimeCreated>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

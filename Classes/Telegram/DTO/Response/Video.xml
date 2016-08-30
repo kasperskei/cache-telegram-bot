@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Response.Video">
+<Super>BaseType</Super>
+<TimeCreated>64130,63200.906761</TimeCreated>
+
+<Property name="file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="width">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="height">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="duration">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="thumb">
+<Type>Telegram.DTO.Response.PhotoSize</Type>
+</Property>
+
+<Property name="mime_type">
+<Type>%String</Type>
+</Property>
+
+<Property name="file_size">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

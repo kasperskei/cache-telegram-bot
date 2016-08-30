@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.LeaveChat">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73770.546152</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.GetFile">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73702.327895</TimeCreated>
+
+<Property name="file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

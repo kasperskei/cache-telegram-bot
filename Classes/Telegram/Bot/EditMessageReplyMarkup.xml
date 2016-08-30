@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25">
-<Class name="Telegram.Bot.EditMessageReplyMarkup">
-<Super>BaseEditMessage</Super>
-<TimeCreated>64152,63354.112389</TimeCreated>
-<ClientName>editMessageReplyMarkup</ClientName>
-</Class>
-</Export>

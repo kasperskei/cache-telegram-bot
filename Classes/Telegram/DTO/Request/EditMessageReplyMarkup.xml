@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.EditMessageReplyMarkup">
+<Super>BaseEditMessage</Super>
+<TimeCreated>64160,73609.80645</TimeCreated>
+</Class>
+</Export>

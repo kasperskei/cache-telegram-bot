@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Response.InlineQueryResultCachedSticker">
+<Description>
+Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content instead of the sticker.</Description>
+<Super>BaseInlineQuery</Super>
+<TimeCreated>64149,84298.203878</TimeCreated>
+
+<Property name="sticker_file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

@@ -7,6 +7,7 @@
 
 <Method name="CreateFactory">
 <Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
 <FormalSpec>userId:%String</FormalSpec>
 </Method>
 </Class>

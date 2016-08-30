@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.SendLocation">
+<Super>BaseSend</Super>
+<TimeCreated>64160,73823.07627</TimeCreated>
+
+<Property name="latitude">
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="longitude">
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

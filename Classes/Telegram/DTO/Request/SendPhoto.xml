@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.SendPhoto">
+<Super>BaseSend</Super>
+<TimeCreated>64160,74058.862517</TimeCreated>
+
+<Property name="photo">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.AnswerCallbackQuery">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73522.075616</TimeCreated>
+
+<Property name="callback_query_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="text">
+<Type>%String</Type>
+</Property>
+
+<Property name="show_alert">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

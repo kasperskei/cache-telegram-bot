@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.SendAudio">
+<Super>BaseSend</Super>
+<TimeCreated>64146,42544.541727</TimeCreated>
+
+<Property name="audio">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="duration">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="performer">
+<Type>%String</Type>
+</Property>
+
+<Property name="title">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

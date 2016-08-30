@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.ForwardMessage">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73636.095816</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="from_chat_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="disable_notification">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="message_id">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

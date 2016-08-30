@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.BaseEditMessage">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,76322.213068</TimeCreated>
+
+<Property name="chat_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="inline_message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="reply_markup">
+<Type>Telegram.DTO.Response.InlineKeyboardMarkup</Type>
+</Property>
+</Class>
+</Export>

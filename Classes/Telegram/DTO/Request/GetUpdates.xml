@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.GetUpdates">
+<Super>BaseRequest</Super>
+<TimeCreated>64160,73740.666353</TimeCreated>
+
+<Property name="offset">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="limit">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="timeout">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>
