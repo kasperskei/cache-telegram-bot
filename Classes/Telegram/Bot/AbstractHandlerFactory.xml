@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.AbstractHandlerFactory">
+<Abstract>1</Abstract>
+<Super>%RegisteredObject</Super>
+<TimeCreated>64159,83072.196347</TimeCreated>
+
+<Method name="CreateFactory">
+<Abstract>1</Abstract>
+<FormalSpec>userId:%String</FormalSpec>
+</Method>
+</Class>
+</Export>

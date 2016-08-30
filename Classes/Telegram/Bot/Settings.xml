@@ -27,6 +27,7 @@ Connection settings to the Telegram Bot Api</Description>
 </Property>
 
 <Method name="GetValue">
+<ClassMethod>1</ClassMethod>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.AbstractHandler">
+<Abstract>1</Abstract>
+<Super>%RegisteredObject</Super>
+<TimeCreated>64159,83076.640052</TimeCreated>
+
+<Method name="OnMessage">
+<Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>message:Telegram.Types.Message</FormalSpec>
+</Method>
+
+<Method name="OnEditedMessage">
+<Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>message:Telegram.Types.Message</FormalSpec>
+</Method>
+
+<Method name="OnInlineQuery">
+<Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>inlineQuery:Telegram.Types.InlineQuery</FormalSpec>
+</Method>
+
+<Method name="OnChosenInlineResult">
+<Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>chosenInlineResult:Telegram.Types.ChosenInlineResult</FormalSpec>
+</Method>
+
+<Method name="OnCallbackQuery">
+<Abstract>1</Abstract>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>callbackQuery:Telegram.Types.CallbackQuery</FormalSpec>
+</Method>
+</Class>
+</Export>
