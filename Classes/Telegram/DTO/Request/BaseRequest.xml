@@ -25,11 +25,11 @@
 				do %code.WriteLine(" set MIMEPart.Body = ..""" _ property.Name _ """")
 			do %code.WriteLine(" } else {")
 				do %code.WriteLine(" set MIMEPart.Body=##class(%GlobalCharacterStream).%New()")
-		    	do %code.WriteLine(" $$$do(MIMEPart.Body.Write($ZCONVERT(..""" _ property.Name _ """,""O"",""UTF8"")))")
+		    	do %code.WriteLine(" do MIMEPart.Body.Write($ZCONVERT(..""" _ property.Name _ """,""O"",""UTF8""))")
 			do %code.WriteLine(" }")
 			
-			do %code.WriteLine(" $$$do(MIMEPart.SetHeader(""Content-Disposition"", contentdisp))")
-			do %code.WriteLine(" $$$do(RootMIMEPart.Parts.Insert(MIMEPart))")
+			do %code.WriteLine(" do MIMEPart.SetHeader(""Content-Disposition"", contentdisp)")
+			do %code.WriteLine(" do RootMIMEPart.Parts.Insert(MIMEPart)")
 		do %code.WriteLine(" }")
 	}
 	

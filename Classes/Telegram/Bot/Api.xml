@@ -17,16 +17,16 @@
 		set request.Https = $$$YES
 		set request.SSLConfiguration = settings.GetValue("ssl")
 		set request.Location = settings.GetValue("token")
-		
+
 		if RootMIMEPart.Parts.Count() '= 0 {
 			set writer = ##class(%Net.MIMEWriter).%New()
-			$$$do(writer.OutputToStream(request.EntityBody))
-			$$$do(writer.WriteMIMEBody(RootMIMEPart))
+			do writer.OutputToStream(request.EntityBody)
+			do writer.WriteMIMEBody(RootMIMEPart)
 			set request.ContentType = "multipart/form-data; boundary="_RootMIMEPart.Boundary
 		}
 
-		$$$do(request.Get(request.Location_"/"_method, 0))
-		$$$do(request.HttpResponse.OutputToDevice())
+		do request.Get(request.Location_"/"_method, 0)
+		do request.HttpResponse.OutputToDevice()
 		
 		return request.HttpResponse.Data
 	}
@@ -632,7 +632,7 @@ Use this method to send text messages. On success, the sent Message is returned.
 
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()
 	set response = deserializer.Deserialize(..SendWebRequest("sendMessage", api.GenerateMultiformData()))
-		
+	
 	if (response.ok) {
 		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
 	}
