@@ -5,12 +5,47 @@
 <Super>%RegisteredObject</Super>
 <TimeCreated>64152,43802.402025</TimeCreated>
 
+<Method name="Start">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set settings = [{"code":"ssl", "name":"SSL Sertificate", "value":""},
+					{"code":"token", "name":"Token Telegram bot", "value":""},
+					{"code":"last", "name":"Last updateId", "value":"0"},
+					{"code":"local", "name":"Local update", "value":"0"},
+					{"code":"interval", "name":"Interval server access", "value":"1"}]
+	
+	for i = 0:1:settings.$size()-1 {
+		if '$isobject(##class(Telegram.Bot.Settings).CodeIndexOpen(settings.$get(i)."code")) {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = settings.$get(i)."code"
+			set setting.Name = settings.$get(i)."name"
+			set setting.Value = settings.$get(i)."value"
+			do setting.%Save()
+			
+			w !, "Added property "_settings.$get(i)."code"
+		}
+		else {
+			w !, "Property "_settings.$get(i)."code"_" already exists"
+		}
+	}
+]]></Implementation>
+</Method>
+
 <Method name="SendWebRequest">
+<Description>
+Sends a web request to API Telegram</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>method:%String,RootMIMEPart:%Net.MIMEPart</FormalSpec>
 <Implementation><![CDATA[
 	try {
 		set settings = ##class(Telegram.Bot.Settings).%New()
+		if 'Get(settings.GetValue("ssl")) {
+			throw ##class(%Exception.General).%New("Don't property",,,"The property is missing with the code ""ssl""")
+		} 
+		if 'Get(settings.GetValue("token")) {
+			throw ##class(%Exception.General).%New("Don't property",,,"The property is missing with the code ""token""")
+		} 
+		
 		set request = ##class(%Net.HttpRequest).%New()
 		set request.ContentType = "multipart/form-data; boundary="
 		set request.Server = "api.telegram.org"
@@ -38,9 +73,9 @@
 
 <Method name="ProcessUpdate">
 <Description>
-Определяет тип обновления и вызывать соответствующий метод handler'a</Description>
+Specifies the type of updates and call the appropriate handler method</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>handler:Telegram.Bot.AbstractHandler,update:Telegram.DTO.Response.Update</FormalSpec>
+<FormalSpec>handler:Telegram.Bot.AbstractHandler,update:Telegram.DTO.Objects.Update</FormalSpec>
 <Implementation><![CDATA[
 	if $IsObject(update.message) {
 		do handler.OnMessage(update.message)
@@ -61,27 +96,25 @@
 </Method>
 
 <Method name="ThreadLocalhook">
+<Description>
+Sends requests to receive updates from API Telegram</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>handler:Telegram.Bot.AbstractHandler</FormalSpec>
 <Implementation><![CDATA[
+	set settings = ##class(Telegram.Bot.Settings).%New()
 	set api = ##class(Telegram.Bot.Api).%New()
-	while ^isActiveOnUpdate {
-		set response = api.GetUpdates()
+	while settings.GetValue("local") {
+		set response = api.GetUpdates(settings.GetValue("last") + 1)
 		
 		for i = 1:1:response.result.Count() {
-			if response.result.GetAt(i)."update_id" > ^lastUpdateId {
-				//w !, response.result.GetAt(i)."update_id" _ " > " _ ^lastUpdateId
-				set update = response.result.GetAt(i)
-				
-				do ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)
-				
-				set ^lastUpdateId = update."update_id"
-			}
+			set update = response.result.GetAt(i)
+			job ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)			
+			do settings.SetValue("last", update."update_id")
 		}
 
-		HANG ^intervalUpdate
+		HANG settings.GetValue("interval")
 	}
-	set ^isActiveOnUpdate = $$$NO
+	do ..DeleteLocalhook()
 ]]></Implementation>
 </Method>
 
@@ -89,16 +122,11 @@
 <Description>
 Use this method to the incoming get updates, referring to the telegram's API, with the specified interval.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>handler:Telegram.Bot.AbstractHandler,interval:%Float=1</FormalSpec>
+<FormalSpec>handler:Telegram.Bot.AbstractHandler</FormalSpec>
 <Implementation><![CDATA[
-	set ^intervalUpdate = interval
-	
-	if $Get(^lastUpdateId) && ^isActiveOnUpdate = $$$YES return
-	if '$Get(^lastUpdateId) set ^lastUpdateId = 0
-	
-	set ^isActiveOnUpdate = $$$YES
-	
-	job ..ThreadLocalhook(handler)
+	do ##class(Telegram.Bot.Settings).SetValue("local", $$$YES)
+	job ..DeleteWebhook()	
+	job ..ThreadLocalhook(handler, multithreading)
 ]]></Implementation>
 </Method>
 
@@ -106,7 +134,7 @@ Use this method to the incoming get updates, referring to the telegram's API, wi
 <Description>
 Use this method to stop SetLocalhook()</Description>
 <ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	if ^isActiveOnUpdate = $$$NO
+<Implementation><![CDATA[	do ##class(Telegram.Bot.Settings).SetValue("local", $$$NO)
 ]]></Implementation>
 </Method>
 
@@ -123,12 +151,8 @@ Use this method to send answers to callback queries sent from inline keyboards. 
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("answerCallbackQuery", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		set response.result = response.result.Convert("%Boolean")
-	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -149,12 +173,8 @@ Use this method to send answers to an inline query. On success, True is returned
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("answerInlineQuery", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		set response.result = response.result.Convert("%Boolean")
-	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -173,15 +193,16 @@ Use this method to edit captions of messages sent by the bot or via the bot (for
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("editMessageCaption", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		if response.result
-			set response.result = response.result.Convert("%Boolean")
-		else
-			set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+	
+	if (response.ok) && $isobject(response.result) {
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
+		set response.result = ""
+		set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+		set response.result = result
+		return response
 	}
-
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -200,14 +221,15 @@ Use this method to edit only the reply markup of messages sent by the bot or via
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("editMessageReplyMarkup", api.GenerateMultiformData()))
 		
-	if (response.ok) {
-		if response.result
-			set response.result = response.result.Convert("%Boolean")
-		else
-			set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+	if (response.ok) && $isobject(response.result) {
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
+		set response.result = ""
+		set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+		set response.result = result
+		return response
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -229,14 +251,15 @@ Use this method to edit text messages sent by the bot or via the bot (for inline
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("editMessageText", api.GenerateMultiformData()))
 		
-	if (response.ok) {
-		if response.result
-			set response.result = response.result.Convert("%Boolean")
-		else
-			set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+	if (response.ok) && $isobject(response.result) {
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
+		set response.result = ""
+		set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+		set response.result = result
+		return response
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -256,10 +279,13 @@ Use this method to forward messages of any kind. On success, the sent Message is
 	set response = deserializer.Deserialize(..SendWebRequest("forwardMessage", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
-
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -268,7 +294,7 @@ Use this method to forward messages of any kind. On success, the sent Message is
 Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetChat).%New()
 	set api."chat_id" = chatId
@@ -277,10 +303,13 @@ Use this method to get up to date information about the chat (current name of th
 	set response = deserializer.Deserialize(..SendWebRequest("getChat", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Chat")
+		set result = response.result.Convert("Telegram.DTO.Objects.Chat")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -289,7 +318,7 @@ Use this method to get up to date information about the chat (current name of th
 Use this method to get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetChatAdministrators).%New()
 	set api."chat_id" = chatId
@@ -299,16 +328,16 @@ Use this method to get a list of administrators in a chat. On success, returns a
 		
 	if (response.ok) {
 		set result = ##class(%ListOfObjects).%New()
-
 		set iter = response.result.$getIterator()
    		while iter.$getNext(.key , .value) {
-	   		$$$do(result.Insert(value.Convert("Telegram.DTO.Response.ChatMember")))
+	   		do result.Insert(value.Convert("Telegram.DTO.Objects.ChatMember"))
    		}
-		
-		set response.result = result
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -317,7 +346,7 @@ Use this method to get a list of administrators in a chat. On success, returns a
 Use this method to get information about a member of a chat. Returns a ChatMember object on success.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetChatMember).%New()
 	set api."chat_id" = chatId
@@ -327,10 +356,13 @@ Use this method to get information about a member of a chat. Returns a ChatMembe
 	set response = deserializer.Deserialize(..SendWebRequest("getChatMember", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.ChatMember")
+		set result = response.result.Convert("Telegram.DTO.Objects.ChatMember")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -339,19 +371,15 @@ Use this method to get information about a member of a chat. Returns a ChatMembe
 Use this method to get the number of members in a chat. Returns Int on success.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetChatMembersCount).%New()
 	set api."chat_id" = chatId
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("getChatMembersCount", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		set response.result = response.result.Convert("%Integer")
-	}
-
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -360,7 +388,7 @@ Use this method to get the number of members in a chat. Returns Int on success.<
 Use this method to get basic info about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>fileId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetFile).%New()
 	set api."file_id" = fileId
@@ -369,10 +397,13 @@ Use this method to get basic info about a file and prepare it for downloading. F
 	set response = deserializer.Deserialize(..SendWebRequest("getFile", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.File")
+		set result = response.result.Convert("Telegram.DTO.Objects.File")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -380,7 +411,7 @@ Use this method to get basic info about a file and prepare it for downloading. F
 <Description>
 A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.</Description>
 <ClassMethod>1</ClassMethod>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetMe).%New()
 	
@@ -388,10 +419,13 @@ A simple method for testing your bot's auth token. Requires no parameters. Retur
 	set response = deserializer.Deserialize(..SendWebRequest("getMe", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.User")
+		set result = response.result.Convert("Telegram.DTO.Objects.User")
 	}
-
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -400,7 +434,7 @@ A simple method for testing your bot's auth token. Requires no parameters. Retur
 Use this method to receive incoming updates using long polling (wiki). An Array of Update objects is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>offset:%Integer,limit:%Integer,timeout:%Integer</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetUpdates).%New()
     set api.offset = $Get(offset)
@@ -412,16 +446,16 @@ Use this method to receive incoming updates using long polling (wiki). An Array 
 	
 	if (response.ok) {
 		set result = ##class(%ListOfObjects).%New()
-
 		set iter = response.result.$getIterator()
    		while iter.$getNext(.key , .value) {
-	   		$$$do(result.Insert(value.Convert("Telegram.DTO.Response.Update")))
+	   		do result.Insert(value.Convert("Telegram.DTO.Objects.Update"))
    		}
-		
-		set response.result = result
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -429,11 +463,11 @@ Use this method to receive incoming updates using long polling (wiki). An Array 
 <Description>
 Use this method to get a list of profile pictures for a user. Returns a UserProfilePhotos object.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,offset:%Integer,limit:%Integer</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<FormalSpec>userId:%String,offset:%Integer,limit:%Integer</FormalSpec>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.GetUserProfilePhotos).%New()
-	set api."chat_id" = chatId
+	set api."user_id" = userId
     set api.offset = $Get(offset)
     set api.limit = $Get(limit)
     
@@ -441,10 +475,13 @@ Use this method to get a list of profile pictures for a user. Returns a UserProf
 	set response = deserializer.Deserialize(..SendWebRequest("getUserProfilePhotos", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.UserProfilePhotos")
+		set result = response.result.Convert("Telegram.DTO.Objects.UserProfilePhotos")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -453,7 +490,7 @@ Use this method to get a list of profile pictures for a user. Returns a UserProf
 Use this method to kick a user from a group or a supergroup. In the case of supergroups, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the group for this to work. Returns True on success.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.KickChatMember).%New()
 	set api."chat_id" = chatId
@@ -461,12 +498,8 @@ Use this method to kick a user from a group or a supergroup. In the case of supe
     
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("kickChatMember", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		set response.result = response.result.Convert("%Boolean")
-	}
-
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -475,19 +508,15 @@ Use this method to kick a user from a group or a supergroup. In the case of supe
 Use this method for your bot to leave a group, supergroup or channel. Returns True on success.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.LeaveChat).%New()
 	set api."chat_id" = chatId
     
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("leaveChat", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		set response.result = response.result.Convert("%Boolean")
-	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -496,7 +525,7 @@ Use this method for your bot to leave a group, supergroup or channel. Returns Tr
 Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendAudio).%New()
 	set api."chat_id" = chatId
@@ -511,10 +540,13 @@ Use this method to send audio files, if you want Telegram clients to display the
 	set response = deserializer.Deserialize(..SendWebRequest("sendAudio", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -523,7 +555,7 @@ Use this method to send audio files, if you want Telegram clients to display the
 Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status). </Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,action:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendChatAction).%New()
 	set api."chat_id" = chatId
@@ -532,7 +564,7 @@ Use this method when you need to tell the user that something is happening on th
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("sendChatAction", api.GenerateMultiformData()))
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 
@@ -541,7 +573,7 @@ Use this method when you need to tell the user that something is happening on th
 Use this method to send phone contacts. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendContact).%New()
     set api."phone_number" = phoneNumber
@@ -555,10 +587,13 @@ Use this method to send phone contacts. On success, the sent Message is returned
 	set response = deserializer.Deserialize(..SendWebRequest("sendContact", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -567,7 +602,7 @@ Use this method to send phone contacts. On success, the sent Message is returned
 Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendDocument).%New()
     set api."chat_id" = chatId
@@ -581,10 +616,13 @@ Use this method to send general files. On success, the sent Message is returned.
 	set response = deserializer.Deserialize(..SendWebRequest("sendDocument", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -593,7 +631,7 @@ Use this method to send general files. On success, the sent Message is returned.
 Use this method to send point on the map. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,latitude:%Float,longitude:%Float,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendLocation).%New()
 	set api."chat_id" = chatId
@@ -607,10 +645,13 @@ Use this method to send point on the map. On success, the sent Message is return
 	set response = deserializer.Deserialize(..SendWebRequest("sendLocation", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -619,7 +660,7 @@ Use this method to send point on the map. On success, the sent Message is return
 Use this method to send text messages. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendMessage).%New()
 	set api."chat_id" = chatId
@@ -634,10 +675,13 @@ Use this method to send text messages. On success, the sent Message is returned.
 	set response = deserializer.Deserialize(..SendWebRequest("sendMessage", api.GenerateMultiformData()))
 	
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -646,7 +690,7 @@ Use this method to send text messages. On success, the sent Message is returned.
 Use this method to send photos. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,photo:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendPhoto).%New()
 	set api."chat_id" = chatId
@@ -660,10 +704,13 @@ Use this method to send photos. On success, the sent Message is returned.</Descr
 	set response = deserializer.Deserialize(..SendWebRequest("sendPhoto", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -672,7 +719,7 @@ Use this method to send photos. On success, the sent Message is returned.</Descr
 Use this method to send .webp stickers. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendSticker).%New()
 	set api."chat_id" = chatId
@@ -685,10 +732,13 @@ Use this method to send .webp stickers. On success, the sent Message is returned
 	set response = deserializer.Deserialize(..SendWebRequest("sendSticker", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -697,7 +747,7 @@ Use this method to send .webp stickers. On success, the sent Message is returned
 Use this method to send information about a venue. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendVenue).%New()
 	set api."chat_id" = chatId
@@ -714,10 +764,13 @@ Use this method to send information about a venue. On success, the sent Message 
 	set response = deserializer.Deserialize(..SendWebRequest("sendVenue", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -726,7 +779,7 @@ Use this method to send information about a venue. On success, the sent Message 
 Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendVideo).%New()
 	set api."chat_id" = chatId
@@ -743,10 +796,13 @@ Use this method to send video files, Telegram clients support mp4 videos (other 
 	set response = deserializer.Deserialize(..SendWebRequest("sendVideo", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -755,7 +811,7 @@ Use this method to send video files, Telegram clients support mp4 videos (other 
 Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,voice:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SendVoice).%New()
 	set api."chat_id" = chatId
@@ -769,10 +825,13 @@ Use this method to send audio files, if you want Telegram clients to display the
 	set response = deserializer.Deserialize(..SendWebRequest("sendVoice", api.GenerateMultiformData()))
 		
 	if (response.ok) {
-		set response.result = response.result.Convert("Telegram.DTO.Response.Message")
+		set result = response.result.Convert("Telegram.DTO.Objects.Message")
 	}
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	set response.result = ""
+	set response = response.Convert("Telegram.DTO.Objects.ApiResponse")
+	set response.result = result
+	return response
 ]]></Implementation>
 </Method>
 
@@ -781,16 +840,26 @@ Use this method to send audio files, if you want Telegram clients to display the
 Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>url:%String,certificate:%FileBinaryStream</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.SetWebhook).%New()
-	set api.url = url
-    set api.certificate = certificate
+	set api.url = $Get(url)
+    set api.certificate = $Get(certificate)
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("setWebhook", api.GenerateMultiformData()))
+	
+	job ..DeleteLocalhook()
+	
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
+]]></Implementation>
+</Method>
 
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+<Method name="DeleteWebhook">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.DTO.Request.SetWebhook).%New()
+	do ..SendWebRequest("setWebhook", api.GenerateMultiformData())
 ]]></Implementation>
 </Method>
 
@@ -799,7 +868,7 @@ Use this method to specify a url and receive incoming updates via an outgoing we
 Use this method to unban a previously kicked user in a supergroup. The user will not return to the group automatically, but will be able to join via link, etc. The bot must be an administrator in the group for this to work. Returns True on success.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String,userId:%String</FormalSpec>
-<ReturnType>Telegram.DTO.Response.ApiResponse</ReturnType>
+<ReturnType>Telegram.DTO.Objects.ApiResponse</ReturnType>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.DTO.Request.UnbanChatMember).%New()
 	set api."chat_id" = chatId
@@ -807,12 +876,8 @@ Use this method to unban a previously kicked user in a supergroup. The user will
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(..SendWebRequest("unbanChatMember", api.GenerateMultiformData()))
-		
-	if (response.ok) {
-		set response.result = response.result.Convert("%Boolean")
-	}
-
-	return response.Convert("Telegram.DTO.Response.ApiResponse")
+	
+	return response.Convert("Telegram.DTO.Objects.ApiResponse")
 ]]></Implementation>
 </Method>
 </Class>

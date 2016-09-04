@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Inline.InlineQueryResultDocument">
+<Description>
+Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the file. Currently, only .PDF and .ZIP files can be sent using this method.</Description>
+<Super>BaseInlineQuery</Super>
+<TimeCreated>64149,84296.891425</TimeCreated>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+
+<Property name="document_url">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="mime_type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="description">
+<Type>%String</Type>
+</Property>
+
+<Property name="thumb_url">
+<Type>%String</Type>
+</Property>
+
+<Property name="thumb_width">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="thumb_height">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

@@ -4,7 +4,7 @@
 <Super>BaseRequest</Super>
 <TimeCreated>64160,73750.798062</TimeCreated>
 
-<Property name="chat_id">
+<Property name="user_id">
 <Type>%String</Type>
 <Required>1</Required>
 </Property>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.UserProfilePhotos">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64130,63201.84733</TimeCreated>
+
+<Property name="total_count">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="photos">
+<Description>
+%Array Of %Array PhotoSize</Description>
+<Type>%Array</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

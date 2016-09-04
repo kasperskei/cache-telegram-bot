@@ -8,12 +8,12 @@
 <XData name="UrlMap">
 <Data><![CDATA[
 <Routes>
- <Route Url="/:token" Method="POST" Call="Test"/>
+ <Route Url="/:token" Method="POST" Call="Update"/>
  </Routes>
 ]]></Data>
 </XData>
 
-<Method name="Test">
+<Method name="Update">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>token:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -23,11 +23,12 @@
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(%request.Content)
-	set update = response.Convert("Telegram.DTO.Response.Update")	
+	set update = response.Convert("Telegram.DTO.Objects.Update")	
 	set handler = ..GetHandlerFactory()
 	
-	do ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)
-
+	job ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)
+	do settings.SetValue("last", update."update_id")
+	
     return $$$OK
 ]]></Implementation>
 </Method>

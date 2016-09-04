@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Examples.MyUserData">
+<Super>%Persistent,Telegram.Bot.AbstractHandlerFactory</Super>
+<TimeCreated>64162,53325.077602</TimeCreated>
+
+<Property name="ChatId">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="UserIdIndex">
+<Properties>ChatId</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Property name="Name">
+<Type>%String</Type>
+</Property>
+
+<Property name="Sex">
+<Type>%Boolean</Type>
+</Property>
+
+<Method name="CreateHandler">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>chatId:%String</FormalSpec>
+<ReturnType>Telegram.Examples.MyUserData</ReturnType>
+<Implementation><![CDATA[
+	set handler = ##class(Telegram.Examples.MyUserData).UserIdIndexOpen(chatId)
+	
+	if '$isobject(handler) {
+		set handler = ##class(Telegram.Examples.MyUserData).%New()
+		set handler.ChatId = chatId
+		do handler.%Save()
+	}
+	
+	return handler
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Telegram.Examples.MyUserDataD</DataLocation>
+<DefaultData>MyUserDataDefaultData</DefaultData>
+<IdLocation>^Telegram.Examples.MyUserDataD</IdLocation>
+<IndexLocation>^Telegram.Examples.MyUserDataI</IndexLocation>
+<StreamLocation>^Telegram.Examples.MyUserDataS</StreamLocation>
+<Data name="MyUserDataDefaultData">
+<Subscript>"MyUserData"</Subscript>
+<Value name="1">
+<Value>UserId</Value>
+</Value>
+<Value name="2">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="3">
+<Value>Name</Value>
+</Value>
+<Value name="4">
+<Value>Sex</Value>
+</Value>
+<Value name="5">
+<Value>ChatId</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

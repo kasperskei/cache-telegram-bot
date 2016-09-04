@@ -8,31 +8,31 @@
 <Method name="OnMessage">
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>message:Telegram.DTO.Response.Message</FormalSpec>
+<FormalSpec>message:Telegram.DTO.Objects.Message</FormalSpec>
 </Method>
 
 <Method name="OnEditedMessage">
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>message:Telegram.DTO.Response.Message</FormalSpec>
+<FormalSpec>message:Telegram.DTO.Objects.Message</FormalSpec>
 </Method>
 
 <Method name="OnInlineQuery">
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>inlineQuery:Telegram.DTO.Response.InlineQuery</FormalSpec>
+<FormalSpec>inlineQuery:Telegram.DTO.Inline.InlineQuery</FormalSpec>
 </Method>
 
 <Method name="OnChosenInlineResult">
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chosenInlineResult:Telegram.DTO.Response.ChosenInlineResult</FormalSpec>
+<FormalSpec>chosenInlineResult:Telegram.DTO.Inline.ChosenInlineResult</FormalSpec>
 </Method>
 
 <Method name="OnCallbackQuery">
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>callbackQuery:Telegram.DTO.Response.CallbackQuery</FormalSpec>
+<FormalSpec>callbackQuery:Telegram.DTO.Objects.CallbackQuery</FormalSpec>
 </Method>
 </Class>
 </Export>

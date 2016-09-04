@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Examples.MyHandler">
+<Super>Telegram.Bot.AbstractHandler</Super>
+<TimeCreated>64161,2751.719538</TimeCreated>
+
+<Method name="OnMessage">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>message:Telegram.DTO.Objects.Message</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.Api).%New()
+	set user = ##class(Telegram.Examples.MyUserData).CreateHandler(message.chat.id)
+	
+	if user.Name = "" {
+		set user.Name = message.chat."first_name"
+		do user.%Save()
+	}
+	
+	if $zcvt($piece(message.text, " ", 1), "L") = "/start" {
+		do api.SendMessage(user.ChatId, "<i>Text</i> of <b>Message</b>", "HTML")
+		HANG 2
+		
+		do api.ForwardMessage(user.ChatId, user.ChatId, , message."message_id")
+		HANG 2
+		
+		do api.SendChatAction(user.ChatId, "upload_photo")
+		
+		set photoId = "AgADAgAD5qcxG6lDfgepYjDY6Do-Ey4zcQ0ABCMbdW_PkDfCNLABAAEC"
+		do api.SendPhoto(user.ChatId, photoId, "Caption")
+		HANG 2
+		
+		//set stream = ##class(%FileBinaryStream).%New()
+		//set stream.Filename = "Path to photo: C:\document.doc"
+		//do api.SendDocument(user.ChatId, stream, "Caption")
+		
+		do api.SendLocation(user.ChatId, 56.01839, 92.86717)
+	}
+	
+	if user.Sex = "" {
+		s male = ##class(Telegram.DTO.Objects.InlineKeyboardButton).%New()
+		s male.text = "Male"
+		s male."callback_data" = "male"
+		
+		s female = ##class(Telegram.DTO.Objects.InlineKeyboardButton).%New()
+		s female.text = "Female"
+		s female."callback_data" = "female"
+		
+		s herm = ##class(Telegram.DTO.Objects.InlineKeyboardButton).%New()
+		s herm.text = "Hermaphrodite"
+		s herm."callback_data" = "herm"
+		
+		s keyboard = ##class(Telegram.DTO.Objects.InlineKeyboardMarkup).%New()
+		s keyboard."inline_keyboard" = [[male, female],[herm]]
+		
+		s replyMarkup = keyboard
+		
+		do api.SendMessage(user.ChatId, "Your gender: ",,,,, replyMarkup)
+	}
+]]></Implementation>
+</Method>
+
+<Method name="OnEditedMessage">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>message:Telegram.DTO.Objects.Message</FormalSpec>
+</Method>
+
+<Method name="OnInlineQuery">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>inlineQuery:Telegram.DTO.Inline.InlineQuery</FormalSpec>
+</Method>
+
+<Method name="OnChosenInlineResult">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>chosenInlineResult:Telegram.DTO.Inline.ChosenInlineResult</FormalSpec>
+</Method>
+
+<Method name="OnCallbackQuery">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>callbackQuery:Telegram.DTO.Objects.CallbackQuery</FormalSpec>
+<Implementation><![CDATA[
+	set api = ##class(Telegram.Bot.Api).%New()
+	set user = ##class(Telegram.Examples.MyUserData).CreateHandler(callbackQuery.message.chat.id)
+	
+	if (callbackQuery.data = "male") || (callbackQuery.data = "female") || (callbackQuery.data = "herm") {
+		set user.Sex = callbackQuery.data
+		do user.%Save()
+		
+		do api.SendMessage(user.ChatId, "Congratulations, you are now "_callbackQuery.data_"!")
+	}
+]]></Implementation>
+</Method>
+</Class>
+</Export>

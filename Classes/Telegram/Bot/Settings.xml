@@ -18,12 +18,10 @@ Connection settings to the Telegram Bot Api</Description>
 
 <Property name="Name">
 <Type>%String</Type>
-<Required>1</Required>
 </Property>
 
 <Property name="Value">
 <Type>%String</Type>
-<Required>1</Required>
 </Property>
 
 <Method name="GetValue">
@@ -33,6 +31,22 @@ Connection settings to the Telegram Bot Api</Description>
 <Implementation><![CDATA[
 	try {
 		return ##class(Telegram.Bot.Settings).CodeIndexOpen(code).Value
+	} catch ex {
+		throw ex
+	}
+]]></Implementation>
+</Method>
+
+<Method name="SetValue">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String,Value:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try {
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen(code)
+		set setting.Value = Value
+		do setting.%Save()
+		return $$$OK
 	} catch ex {
 		throw ex
 	}

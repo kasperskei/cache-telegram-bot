@@ -14,7 +14,7 @@
 </Property>
 
 <Property name="reply_to_message_id">
-<Type>%Integer</Type>
+<Type>%String</Type>
 </Property>
 
 <Property name="reply_markup">

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.ChatMember">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64130,63203.638197</TimeCreated>
+
+<Property name="user">
+<Type>Telegram.DTO.Objects.User</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="status">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

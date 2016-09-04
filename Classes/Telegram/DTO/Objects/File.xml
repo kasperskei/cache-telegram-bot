@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.File">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64130,63202.033272</TimeCreated>
+
+<Property name="file_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="file_size">
+<Type>%Integer</Type>
+</Property>
+
+<UDLText name="T">
+<Content><![CDATA[
+// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
+
+]]></Content>
+</UDLText>
+
+<Property name="file_path">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

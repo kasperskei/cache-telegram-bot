@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.ReplyKeyboardMarkup">
+<Description>
+This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).</Description>
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64141,62818.145481</TimeCreated>
+
+<Property name="keyboard">
+<Description>
+%Array of %Array KeyboardButton</Description>
+<Type>%Array</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="resize_keyboard">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="one_time_keyboard">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="selective">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

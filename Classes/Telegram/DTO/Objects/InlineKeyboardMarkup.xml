@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.InlineKeyboardMarkup">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64130,63202.9075</TimeCreated>
+
+<Property name="inline_keyboard">
+<Description>
+%Array of %Array InlineKeyboardButton</Description>
+<Type>%Array</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

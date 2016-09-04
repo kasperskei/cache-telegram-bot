@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.BaseInlineQuery">
+<Super>BaseType</Super>
+<TimeCreated>64160,76487.594777</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="reply_markup">
+<Type>Telegram.DTO.Response.InlineKeyboardMarkup</Type>
+</Property>
+
+<Property name="input_message_content">
+<Type>%Object</Type>
+</Property>
+</Class>
+</Export>

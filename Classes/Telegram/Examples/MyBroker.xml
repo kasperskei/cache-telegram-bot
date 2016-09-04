@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Examples.MyBroker">
+<Super>Telegram.Bot.AbstractBroker</Super>
+<TimeCreated>64162,50164.656083</TimeCreated>
+
+<Method name="GetHandlerFactory">
+<ClassMethod>1</ClassMethod>
+<ReturnType>Telegram.Examples.MyHandler</ReturnType>
+<Implementation><![CDATA[	return ##class(Telegram.Examples.MyHandler).%New()
+]]></Implementation>
+</Method>
+</Class>
+</Export>

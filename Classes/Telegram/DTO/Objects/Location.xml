@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.Location">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64130,63201.467619</TimeCreated>
+
+<Property name="longitude">
+<Type>%Double</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="latitude">
+<Type>%Double</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>
