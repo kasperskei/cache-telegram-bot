@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25">
-<Class name="Telegram.DTO.Objects.BaseType">
-<Super>Serializer.Serializable.Object</Super>
-<TimeCreated>64130,63531.291441</TimeCreated>
-</Class>
-</Export>
