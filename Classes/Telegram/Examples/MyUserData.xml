@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Telegram.Examples.MyUserData">
-<Super>%Persistent,Telegram.Bot.AbstractHandlerFactory</Super>
+<Super>%Persistent</Super>
 <TimeCreated>64162,53325.077602</TimeCreated>
 
 <Property name="ChatId">
@@ -22,20 +22,20 @@
 <Type>%Boolean</Type>
 </Property>
 
-<Method name="CreateHandler">
+<Method name="GetUser">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>chatId:%String</FormalSpec>
 <ReturnType>Telegram.Examples.MyUserData</ReturnType>
 <Implementation><![CDATA[
-	set handler = ##class(Telegram.Examples.MyUserData).UserIdIndexOpen(chatId)
+	set user = ##class(Telegram.Examples.MyUserData).UserIdIndexOpen(chatId)
 	
-	if '$isobject(handler) {
-		set handler = ##class(Telegram.Examples.MyUserData).%New()
-		set handler.ChatId = chatId
-		do handler.%Save()
+	if '$isobject(user) {
+		set user = ##class(Telegram.Examples.MyUserData).%New()
+		set user.ChatId = chatId
+		do user.%Save()
 	}
 	
-	return handler
+	return user
 ]]></Implementation>
 </Method>
 

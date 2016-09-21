@@ -33,7 +33,7 @@
 ]]></Implementation>
 </Method>
 
-<Method name="GetHandlerFactory">
+<Method name="GetHandler">
 <Abstract>1</Abstract>
 <ClassMethod>1</ClassMethod>
 <ReturnType>Telegram.Bot.AbstractHandler</ReturnType>

@@ -4,7 +4,7 @@
 <Super>Telegram.Bot.AbstractBroker</Super>
 <TimeCreated>64162,50164.656083</TimeCreated>
 
-<Method name="GetHandlerFactory">
+<Method name="GetHandler">
 <ClassMethod>1</ClassMethod>
 <ReturnType>Telegram.Examples.MyHandler</ReturnType>
 <Implementation><![CDATA[	return ##class(Telegram.Examples.MyHandler).%New()

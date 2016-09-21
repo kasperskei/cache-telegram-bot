@@ -53,32 +53,6 @@ Connection settings to the Telegram Bot Api</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="Fill">
-<ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[
-	set settings = [{"code":"ssl", "name":"SSL Sertificate", "value":""},
-					{"code":"token", "name":"Token Telegram bot", "value":""},
-					{"code":"last", "name":"Last updateId", "value":"0"},
-					{"code":"local", "name":"Local update", "value":"0"},
-					{"code":"interval", "name":"Interval server access", "value":"1"}]
-	
-	for i = 0:1:settings.$size()-1 {
-		if '$isobject(##class(Telegram.Bot.Settings).CodeIndexOpen(settings.$get(i)."code")) {
-			set setting = ##class(Telegram.Bot.Settings).%New()
-			set setting.Code = settings.$get(i)."code"
-			set setting.Name = settings.$get(i)."name"
-			set setting.Value = settings.$get(i)."value"
-			do setting.%Save()
-			
-			w !, "Added property "_settings.$get(i)."code"
-		}
-		else {
-			w !, "Property "_settings.$get(i)."code"_" already exists"
-		}
-	}
-]]></Implementation>
-</Method>
-
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^Telegram.Bot.SettingsD</DataLocation>

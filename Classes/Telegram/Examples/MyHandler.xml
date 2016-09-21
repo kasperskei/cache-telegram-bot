@@ -9,7 +9,7 @@
 <FormalSpec>message:Telegram.DTO.Objects.Message</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.Api).%New()
-	set user = ##class(Telegram.Examples.MyUserData).CreateHandler(message.chat.id)
+	set user = ##class(Telegram.Examples.MyUserData).GetUser(message.chat.id)
 	
 	if user.Name = "" {
 		set user.Name = message.chat."first_name"
