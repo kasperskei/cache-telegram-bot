@@ -58,6 +58,7 @@ Specifies the type of updates and call the appropriate handler method</Descripti
 <ClassMethod>1</ClassMethod>
 <FormalSpec>handler:Telegram.Bot.AbstractHandler,update:Telegram.DTO.Objects.Update</FormalSpec>
 <Implementation><![CDATA[
+	
 	if $IsObject(update.message) {
 		do handler.OnMessage(update.message)
 	}
@@ -87,13 +88,13 @@ Sends requests to receive updates from API Telegram</Description>
 	
 	while settings.GetValue("local") {
 		set response = request.GetUpdates(settings.GetValue("last") + 1)
-		
-		for i = 1:1:response.result.Count() {
-			set update = response.result.GetAt(i)
-			job ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)			
+
+		for i = 1:1:response.Count() {
+			set update = response.GetAt(i)
+			job ..ProcessUpdate(handler, update)			
 			do settings.SetValue("last", update."update_id")
 		}
-
+		
 		HANG settings.GetValue("interval")
 	}
 ]]></Implementation>

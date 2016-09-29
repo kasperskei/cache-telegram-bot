@@ -79,7 +79,7 @@
 <FormalSpec>callbackQuery:Telegram.DTO.Objects.CallbackQuery</FormalSpec>
 <Implementation><![CDATA[
 	set api = ##class(Telegram.Bot.Api).%New()
-	set user = ##class(Telegram.Examples.MyUserData).CreateHandler(callbackQuery.message.chat.id)
+	set user = ##class(Telegram.Examples.MyUserData).GetUser(callbackQuery.message.chat.id)
 	
 	if (callbackQuery.data = "male") || (callbackQuery.data = "female") || (callbackQuery.data = "herm") {
 		set user.Sex = callbackQuery.data
