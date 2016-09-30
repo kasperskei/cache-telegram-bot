@@ -39,13 +39,71 @@ Connection settings to the Telegram Bot Api</Description>
 
 <Method name="SetValue">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>code:%String,Value:%String</FormalSpec>
+<FormalSpec>code:%String,value:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	try {
 		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen(code)
-		set setting.Value = Value
+		set setting.Value = value
 		do setting.%Save()
+		return $$$OK
+	} catch ex {
+		throw ex
+	}
+]]></Implementation>
+</Method>
+
+<Method name="Init">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ssl:%String,token:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try {
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen("ssl")
+		if setting = "" {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = "ssl"
+			set setting.Name = "SSL Sertificate"
+		}
+		set setting.Value = ssl
+		do setting.%Save()
+		
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen("token")
+		if setting = "" {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = "token"
+			set setting.Name = "Token Telegram bot"
+		}
+		set setting.Value = token
+		do setting.%Save()
+		
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen("last")
+		if setting = "" {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = "last"
+			set setting.Name = "Last updateId"
+			set setting.Value = 0
+			do setting.%Save()
+		}
+		
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen("local")
+		if setting = "" {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = "local"
+			set setting.Name = "Local update"
+			set setting.Value = 0
+			do setting.%Save()
+		}
+		
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen("interval")
+		if setting = "" {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = "interval"
+			set setting.Name = "Interval server access"
+			set setting.Value = 1
+			do setting.%Save()
+		}
+	
 		return $$$OK
 	} catch ex {
 		throw ex
