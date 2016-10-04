@@ -16,6 +16,10 @@ Represents a link to a voice recording in an .ogg container encoded with OPUS. B
 <Required>1</Required>
 </Property>
 
+<Property name="caption">
+<Type>%String</Type>
+</Property>
+
 <Property name="voice_duration">
 <Type>%Integer</Type>
 </Property>

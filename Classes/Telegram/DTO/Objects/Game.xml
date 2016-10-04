@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.Game">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64195,82030.50501</TimeCreated>
+
+<Property name="title">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="description">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="photo">
+<Description>
+%Array Of Telegram.DTO.Objects.PhotoSize</Description>
+<Type>%Array</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="text">
+<Type>%String</Type>
+</Property>
+
+<Property name="text_entities">
+<Description>
+%Array Of Telegram.DTO.Objects.MessageEntity</Description>
+<Type>%Array</Type>
+</Property>
+
+<Property name="animation">
+<Type>Telegram.DTO.Objects.Animation</Type>
+</Property>
+</Class>
+</Export>

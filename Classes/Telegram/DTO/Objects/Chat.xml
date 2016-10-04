@@ -29,5 +29,9 @@
 <Property name="last_name">
 <Type>%String</Type>
 </Property>
+
+<Property name="all_members_are_administrators">
+<Type>%Boolean</Type>
+</Property>
 </Class>
 </Export>

@@ -19,7 +19,7 @@
 </Property>
 
 <Property name="message_id">
-<Type>%Integer</Type>
+<Type>%String</Type>
 <Required>1</Required>
 </Property>
 </Class>

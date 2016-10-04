@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Inline.InlineQueryResultGame">
+<Description>
+Represents a Game.</Description>
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64195,81396.46145</TimeCreated>
+
+<Property name="type">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="game_short_name">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="reply_markup">
+<Type>Telegram.DTO.Objects.InlineKeyboardMarkup</Type>
+</Property>
+</Class>
+</Export>

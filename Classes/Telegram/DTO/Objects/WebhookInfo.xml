@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.WebhookInfo">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64195,85551.27535</TimeCreated>
+
+<Property name="url">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="has_custom_certificate">
+<Type>%Boolean</Type>
+</Property>
+
+<Property name="pending_update_count">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="last_error_date">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="last_error_message">
+<Type>%String</Type>
+</Property>
+</Class>
+</Export>

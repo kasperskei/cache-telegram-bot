@@ -61,6 +61,10 @@
 <Type>Telegram.DTO.Objects.Document</Type>
 </Property>
 
+<Property name="game">
+<Type>Telegram.DTO.Objects.Game</Type>
+</Property>
+
 <Property name="photo">
 <Description>
 %Array Of Telegram.DTO.Objects.PhotoSize</Description>

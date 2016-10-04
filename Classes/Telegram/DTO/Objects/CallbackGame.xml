@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.CallbackGame">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64195,82790.62591</TimeCreated>
+</Class>
+</Export>

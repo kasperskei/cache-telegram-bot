@@ -33,21 +33,31 @@ Sends a web request to API Telegram</Description>
 	set response = deserializer.Deserialize(request.HttpResponse.Data)
 
 	if (response.ok) {
-		if ($classname(response.result) = "%Library.Array") && (type '= "") {
+		if ($ClassName(response.result) = "%Library.Array") && (type '= "") {
 			set result = ##class(%ListOfObjects).%New()
-			set iter = response.result.$getIterator()
-	   		while iter.$getNext(.key , .value) {
+			set iter = response.result.$GetIterator()
+	   		while iter.$GetNext(.key , .value) {
 		   		do result.Insert(value.Convert(type))
 	   		}
 	   		return result
 		}
-		if ($isobject(response.result)) && (type '= "") {
+		if ($IsObject(response.result)) && (type '= "") {
 			return response.result.Convert(type)
 		}
 		return response.result
 	}
 	else {
-		throw ##class(%Exception.General).%New("Response", response."error_code", "Telegram BOT Api", response.description)
+		set exception = ##class(Telegram.Bot.ResponseException).%New()
+		set exception.Name = "Response"
+		set exception.Method = method
+		set exception.Data = requestData
+		set exception.Description = response.description
+		set exception.Code = response."error_code"
+		if $IsObject(exception.parameters) {
+			set exception.Parameters = response.parameters.Convert("Telegram.DTO.Objects.ResponseParameters")
+		}
+		
+		throw exception
 	}
 ]]></Implementation>
 </Method>
@@ -124,13 +134,14 @@ Use this method to stop SetLocalhook()</Description>
 <Description>
 Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean</FormalSpec>
+<FormalSpec>callbackQueryId:%String,text:%String,showAlert:%Boolean,url:%String</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.AnswerCallbackQuery).%New()
 	set request."callback_query_id" = callbackQueryId
 	set request.text = $Get(text)
 	set request."show_alert" = $Get(showAlert)
+	set request.url = $Get(url)
 	
 	return ..SendWebRequest("answerCallbackQuery", request)
 ]]></Implementation>
@@ -215,7 +226,7 @@ Use this method to edit text messages sent by the bot or via the bot (for inline
 <Description>
 Use this method to forward messages of any kind. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%Integer</FormalSpec>
+<FormalSpec>chatId:%String,fromChatId:%String,disableNotification:%Boolean,messageId:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.ForwardMessage).%New()
@@ -299,6 +310,23 @@ Use this method to get basic info about a file and prepare it for downloading. F
 ]]></Implementation>
 </Method>
 
+<Method name="GetGameHighScores">
+<Description>
+Use this method to get data for high score tables. Will return the score of the specified user and several of his neighbors in a game. On success, returns an Array of GameHighScore objects.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>userId:%String,chatId:%String,messageId:%String,inlineMessageId:%String</FormalSpec>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set request = ##class(Telegram.DTO.Request.GetGameHighScores).%New()
+	set request."user_id" = userId
+	set request."chat_id" = $Get(chatId)
+	set request."message_id" = $Get(messageId)
+	set request."inline_message_id" = $Get(inlineMessageId)
+	
+	return ..SendWebRequest("getMe", request, "Telegram.DTO.Objects.GameHighScore")
+]]></Implementation>
+</Method>
+
 <Method name="GetMe">
 <Description>
 A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot in form of a User object.</Description>
@@ -343,6 +371,18 @@ Use this method to get a list of profile pictures for a user. Returns a UserProf
 ]]></Implementation>
 </Method>
 
+<Method name="GetWebhookInfo">
+<Description>
+Use this method to get current webhook status. Requires no parameters. On success, returns a WebhookInfo object. If the bot is using getUpdates, will return an object with the url field empty.</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>Telegram.DTO.Objects.WebhookInfo</ReturnType>
+<Implementation><![CDATA[
+	set request = ##class(Telegram.DTO.Request.GetWebhookInfo).%New()
+    
+	return ..SendWebRequest("getWebhookInfo", request, "Telegram.DTO.Objects.WebhookInfo")
+]]></Implementation>
+</Method>
+
 <Method name="KickChatMember">
 <Description>
 Use this method to kick a user from a group or a supergroup. In the case of supergroups, the user will not be able to return to the group on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the group for this to work. Returns True on success.</Description>
@@ -376,11 +416,13 @@ Use this method for your bot to leave a group, supergroup or channel. Returns Tr
 <Description>
 Use this method to send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .mp3 format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,audio:%String,caption:%String,duration:%Integer,performer:%String,title:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendAudio).%New()
 	set request."chat_id" = chatId
+	set request.audio = audio
+	set request.caption = $Get(caption)
 	set request.duration = $Get(duration)
 	set request.performer = $Get(performer)
 	set request.title = $Get(title)
@@ -411,7 +453,7 @@ Use this method when you need to tell the user that something is happening on th
 <Description>
 Use this method to send phone contacts. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,phoneNumber:%String,firstName:%String,lastName:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendContact).%New()
@@ -430,7 +472,7 @@ Use this method to send phone contacts. On success, the sent Message is returned
 <Description>
 Use this method to send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,document:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendDocument).%New()
@@ -445,11 +487,29 @@ Use this method to send general files. On success, the sent Message is returned.
 ]]></Implementation>
 </Method>
 
+<Method name="SendGame">
+<Description>
+Use this method to send a game. On success, the sent Message is returned.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>chatId:%String,gameShortName:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
+<ReturnType>Telegram.DTO.Objects.Message</ReturnType>
+<Implementation><![CDATA[
+	set request = ##class(Telegram.DTO.Request.SendGame).%New()
+	set request."chat_id" = chatId
+    set request."game_short_name" = gameShortName
+    set request."disable_notification" = $Get(disableNotification)
+    set request."reply_to_message_id" = $Get(replyToMessageId)
+    set request."reply_markup" = $Get(replyMarkup)
+	
+	return ..SendWebRequest("sendGame", request, "Telegram.DTO.Objects.Message")
+]]></Implementation>
+</Method>
+
 <Method name="SendLocation">
 <Description>
 Use this method to send point on the map. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,latitude:%Float,longitude:%Float,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,latitude:%Float,longitude:%Float,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendLocation).%New()
@@ -468,7 +528,7 @@ Use this method to send point on the map. On success, the sent Message is return
 <Description>
 Use this method to send text messages. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,text:%String,parseMode:%String,disableWebPagePreview:%Boolean,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendMessage).%New()
@@ -488,7 +548,7 @@ Use this method to send text messages. On success, the sent Message is returned.
 <Description>
 Use this method to send photos. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,photo:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,photo:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendPhoto).%New()
@@ -507,7 +567,7 @@ Use this method to send photos. On success, the sent Message is returned.</Descr
 <Description>
 Use this method to send .webp stickers. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,sticker:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendSticker).%New()
@@ -525,7 +585,7 @@ Use this method to send .webp stickers. On success, the sent Message is returned
 <Description>
 Use this method to send information about a venue. On success, the sent Message is returned.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,latitude:%String,longitude:%String,title:%String,address:%String,foursquareId:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendVenue).%New()
@@ -547,7 +607,7 @@ Use this method to send information about a venue. On success, the sent Message 
 <Description>
 Use this method to send video files, Telegram clients support mp4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,video:%String,duration:%String,width:%String,height:%String,caption:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendVideo).%New()
@@ -569,11 +629,12 @@ Use this method to send video files, Telegram clients support mp4 videos (other 
 <Description>
 Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .ogg file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>chatId:%String,voice:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%Integer,replyMarkup:%String</FormalSpec>
+<FormalSpec>chatId:%String,voice:%String,caption:%String,duration:%String,disableNotification:%Boolean,replyToMessageId:%String,replyMarkup:%String</FormalSpec>
 <ReturnType>Telegram.DTO.Objects.Message</ReturnType>
 <Implementation><![CDATA[
 	set request = ##class(Telegram.DTO.Request.SendVoice).%New()
 	set request."chat_id" = chatId
+	set request.caption = caption
     set request.voice= voice
     set request.duration = $Get(duration)
     set request."disable_notification" = $Get(disableNotification)
@@ -581,6 +642,25 @@ Use this method to send audio files, if you want Telegram clients to display the
     set request."reply_markup" = $Get(replyMarkup)
 	
 	return ..SendWebRequest("sendVoice", request, "Telegram.DTO.Objects.Message")
+]]></Implementation>
+</Method>
+
+<Method name="SetGameScore">
+<Description>
+Use this method to set the score of the specified user in a game. On success, if the message was sent by the bot, returns the edited Message, otherwise returns True. Returns an error, if the new score is not greater than the user's current score in the chat.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>userId:%String,score:%Integer,chatId:%String,messageId:%String,inlineMessageId:%String,editMessage:%Boolean</FormalSpec>
+<ReturnType>Telegram.DTO.Objects.Message</ReturnType>
+<Implementation><![CDATA[
+	set request = ##class(Telegram.DTO.Request.SetGameScore).%New()
+	set request."user_id" = userId
+	set request.score = score
+	set request."chat_id" = $Get(chatId)
+	set request."message_id" = $Get(messageId)
+	set request."inline_message_id" = $Get(inlineMessageId)
+	set request."edit_message" = $Get(editMessage)
+
+	return ..SendWebRequest("setGameScore", request, "Telegram.DTO.Objects.Message")
 ]]></Implementation>
 </Method>
 

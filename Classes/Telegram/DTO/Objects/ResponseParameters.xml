@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.ResponseParameters">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64196,2089.913231</TimeCreated>
+
+<Property name="migrate_to_chat_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="retry_after">
+<Type>%Integer</Type>
+</Property>
+</Class>
+</Export>

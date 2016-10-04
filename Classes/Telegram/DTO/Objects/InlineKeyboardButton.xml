@@ -20,5 +20,13 @@
 <Property name="switch_inline_query">
 <Type>%String</Type>
 </Property>
+
+<Property name="switch_inline_query_current_chat">
+<Type>%String</Type>
+</Property>
+
+<Property name="callback_game">
+<Type>Telegram.DTO.Objects.CallbackGame</Type>
+</Property>
 </Class>
 </Export>

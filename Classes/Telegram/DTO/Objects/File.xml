@@ -13,14 +13,9 @@
 <Type>%Integer</Type>
 </Property>
 
-<UDLText name="T">
-<Content><![CDATA[
-// File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
-
-]]></Content>
-</UDLText>
-
 <Property name="file_path">
+<Description><![CDATA[
+File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.]]></Description>
 <Type>%String</Type>
 </Property>
 </Class>

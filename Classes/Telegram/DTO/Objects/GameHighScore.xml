@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Objects.GameHighScore">
+<Super>Serializer.Serializable.Object</Super>
+<TimeCreated>64195,83780.933181</TimeCreated>
+
+<Property name="position">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="user">
+<Type>Telegram.DTO.Objects.User</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="score">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+</Class>
+</Export>

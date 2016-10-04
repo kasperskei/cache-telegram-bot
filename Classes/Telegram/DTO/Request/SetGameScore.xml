@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.DTO.Request.SetGameScore">
+<Super>BaseRequest</Super>
+<TimeCreated>64195,83572.428912</TimeCreated>
+
+<Property name="user_id">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="score">
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="chat_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="inline_message_id">
+<Type>%String</Type>
+</Property>
+
+<Property name="edit_message">
+<Type>%Boolean</Type>
+</Property>
+</Class>
+</Export>

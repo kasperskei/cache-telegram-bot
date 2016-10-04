@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Telegram.Bot.ResponseException">
+<Super>%Exception.AbstractException</Super>
+<TimeCreated>64196,3624.773891</TimeCreated>
+
+<Property name="Method">
+<Type>%String</Type>
+</Property>
+
+<Property name="Description">
+<Type>%String</Type>
+</Property>
+
+<Property name="Parameters">
+<Type>Telegram.DTO.Objects.ResponseParameters</Type>
+</Property>
+</Class>
+</Export>
