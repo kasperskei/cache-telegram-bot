@@ -31,12 +31,12 @@ Sends a web request to API Telegram</Description>
 	
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()
 	set response = deserializer.Deserialize(request.HttpResponse.Data)
-
+ 
 	if (response.ok) {
 		if ($ClassName(response.result) = "%Library.Array") && (type '= "") {
 			set result = ##class(%ListOfObjects).%New()
-			set iter = response.result.$GetIterator()
-	   		while iter.$GetNext(.key , .value) {
+			set iter = response.result.$getIterator()
+	   		while iter.$getNext(.key , .value) {
 		   		do result.Insert(value.Convert(type))
 	   		}
 	   		return result
