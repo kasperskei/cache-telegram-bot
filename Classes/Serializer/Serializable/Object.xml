@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:59">
+<Export generator="Cache" version="25">
 <Class name="Serializer.Serializable.Object">
 <Super>%RegisteredObject</Super>
-<TimeChanged>64132,42288</TimeChanged>
 <TimeCreated>64127,56854.553728</TimeCreated>
 
 <Parameter name="internalProp">
@@ -11,7 +10,7 @@
 </Parameter>
 
 <Property name="%data">
-<Type>%Object</Type>
+<Type>%DynamicObject</Type>
 </Property>
 
 <Property name="%prop">
@@ -23,7 +22,7 @@
 <ReturnType>%Status</ReturnType>
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[
-	set ..%data = ##class(%Object).%New()
+	set ..%data = ##class(%DynamicObject).%New()
 	for i=1:1:$ll(..GetProperties()){
 		set ..%prop($li(..GetProperties(),i)) = ""
 	}
@@ -53,10 +52,6 @@
 </Method>
 
 <Method name="%DispatchGetProperty">
-<Description><![CDATA[
- Property dispatch method to catch references to 
- virtual properties. <br>
- This should not be called directly.<br>]]></Description>
 <Internal>1</Internal>
 <FormalSpec>propertyName:%String(MAXLEN="")</FormalSpec>
 <ServerOnly>1</ServerOnly>
@@ -66,6 +61,9 @@
 
 <Method name="%DispatchSetProperty">
 <Description><![CDATA[
+ Property dispatch method to catch references to 
+ virtual properties. <br>
+ This should not be called directly.<br>
  Property dispatch method to catch references to 
  virtual properties.<br>
  This should not be called directly.<br>]]></Description>
@@ -85,14 +83,14 @@
 
 <Method name="GetIterator">
 <ReturnType>DynamicPropertyIterator</ReturnType>
-<Implementation><![CDATA[	ret ##class(DynamicPropertyIterator).%New(..GetProperties(), ..%data.$getIterator(), $this)
+<Implementation><![CDATA[	ret ##class(DynamicPropertyIterator).%New(..GetProperties(), ..%data.%GetIterator(), $this)
 ]]></Implementation>
 </Method>
 
 <Method name="HasProperty">
 <FormalSpec>propertyName:%String(MAXLEN="")</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[	return $data(..%prop(propertyName)) || ..%data.$isDefined(propertyName)
+<Implementation><![CDATA[	return $data(..%prop(propertyName)) || ..%data.%IsDefined(propertyName)
 ]]></Implementation>
 </Method>
 

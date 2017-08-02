@@ -11,13 +11,15 @@ Sends a web request to API Telegram</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>method:%String,requestData:Telegram.DTO.Request.BaseRequest,type:%String</FormalSpec>
 <Implementation><![CDATA[
+	/// Configuration request
 	set request = ##class(%Net.HttpRequest).%New()
 	set request.ContentType = "multipart/form-data; boundary="
 	set request.Server = "api.telegram.org"
 	set request.Https = $$$YES
 	set request.SSLConfiguration = ##class(Telegram.Bot.Settings).GetValue("ssl")
-	set request.Location = ##class(Telegram.Bot.Settings).GetValue("token")
+	set request.Location = "bot"_##class(Telegram.Bot.Settings).GetValue("token")
 	
+	/// The content of the request data
 	set RootMIMEPart = requestData.GenerateMultiformData()
 	if RootMIMEPart.Parts.Count() '= 0 {
 		set writer = ##class(%Net.MIMEWriter).%New()
@@ -26,17 +28,19 @@ Sends a web request to API Telegram</Description>
 		set request.ContentType = "multipart/form-data; boundary="_RootMIMEPart.Boundary
 	}
 	
-	do request.Get(request.Location_"/"_method, 0)
-	do request.HttpResponse.OutputToDevice()
+	/// Send request
+	do request.Get(request.Location_"/"_method, 2)
+	//do request.HttpResponse.OutputToDevice()
 	
+	/// Deserialize the response
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()
 	set response = deserializer.Deserialize(request.HttpResponse.Data)
  
 	if (response.ok) {
-		if ($ClassName(response.result) = "%Library.Array") && (type '= "") {
+		if ($ClassName(response.result) = "%Library.DynamicArray") && (type '= "") {
 			set result = ##class(%ListOfObjects).%New()
-			set iter = response.result.$getIterator()
-	   		while iter.$getNext(.key , .value) {
+			set iter = response.result.%GetIterator()
+	   		while iter.%GetNext(.key , .value) {
 		   		do result.Insert(value.Convert(type))
 	   		}
 	   		return result

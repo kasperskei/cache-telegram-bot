@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:35">
+<Export generator="Cache" version="25">
 <Class name="Serializer.TomlDeserializer">
 <Super>Serializer.AbstractDeserializer</Super>
-<TimeChanged>64132,42263</TimeChanged>
 <TimeCreated>64128,4888.27756</TimeCreated>
+<ClassDefinitionError>1</ClassDefinitionError>
 
 <Method name="InternalDeserialize">
 <FormalSpec>stream:%Stream.Object,classname:%String</FormalSpec>
@@ -15,9 +15,9 @@
 		for i=1:1:parser.Errors{
 			set err = err_"Error at "_parser.Errors(i,"row")_":"_parser.Errors(i,"col")_" - "_parser.Errors(i,"text")_$c(13,10)
 		}
-		$$$throw(err)
+$$$throw(err)
 	}
-	return ret
+return ret
 ]]></Implementation>
 </Method>
 </Class>

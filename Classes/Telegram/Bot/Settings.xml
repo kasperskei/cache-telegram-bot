@@ -25,6 +25,8 @@ Connection settings to the Telegram Bot Api</Description>
 </Property>
 
 <Method name="GetValue">
+<Description>
+Is called to get the settings for the key passed to the method.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
@@ -38,6 +40,8 @@ Connection settings to the Telegram Bot Api</Description>
 </Method>
 
 <Method name="SetValue">
+<Description>
+Sets the value of the settings for the key passed to the method.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>code:%String,value:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -54,6 +58,8 @@ Connection settings to the Telegram Bot Api</Description>
 </Method>
 
 <Method name="Init">
+<Description>
+It is called when the application is initialized and gets the name of the ssl certificate and the Telegram token of the bot.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ssl:%String,token:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>

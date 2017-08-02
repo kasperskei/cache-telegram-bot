@@ -7,7 +7,7 @@
 
 <Method name="ThrowIfError">
 <Description>
-Бросает исключение, если результат не 1</Description>
+Throws an exception if the result is not 1 </Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sc:%Status</FormalSpec>
 <Implementation><![CDATA[
@@ -18,7 +18,7 @@
 
 <Method name="ThrowString">
 <Description>
-Бросает исключение с заданным текстом</Description>
+Throws an exception with the given text</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>string:%String</FormalSpec>
 <Implementation><![CDATA[	do ..ThrowStatus($$$ERROR($$$GeneralError, string))
@@ -54,7 +54,7 @@
 
 <Method name="IsPrefix">
 <Description>
-Проверяет, является ли строка substring префиксом строки string</Description>
+Checks whether a string substring is a prefix of the string</Description>
 <ClassMethod>1</ClassMethod>
 <CodeMode>expression</CodeMode>
 <FormalSpec>string:%String,substring:%String</FormalSpec>
@@ -65,8 +65,8 @@
 
 <Method name="DeletePrefix">
 <Description>
-Удаляет префикс prefix из строки string.
-Если строка не содержит префикс, то бросает исключение.</Description>
+Removes the prefix prefix from the string string.
+If the string does not contain a prefix, it throws an exception.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>string:%String,prefix:%String</FormalSpec>
 <ReturnType>%String</ReturnType>

@@ -20,6 +20,9 @@
 		do api.SendMessage(user.ChatId, "<i>Text</i> of <b>Message</b>", "HTML")
 		HANG 2
 		
+		do api.SendSticker(user.ChatId, "BQADAgADYAEAAmMr4gmuJ-7ZcY8iEwI")		
+		HANG 2
+		
 		do api.ForwardMessage(user.ChatId, user.ChatId, , message."message_id")
 		HANG 2
 		
@@ -34,27 +37,6 @@
 		//do api.SendDocument(user.ChatId, stream, "Caption")
 		
 		do api.SendLocation(user.ChatId, 56.01839, 92.86717)
-	}
-	
-	if user.Sex = "" {
-		s male = ##class(Telegram.DTO.Objects.InlineKeyboardButton).%New()
-		s male.text = "Male"
-		s male."callback_data" = "male"
-		
-		s female = ##class(Telegram.DTO.Objects.InlineKeyboardButton).%New()
-		s female.text = "Female"
-		s female."callback_data" = "female"
-		
-		s herm = ##class(Telegram.DTO.Objects.InlineKeyboardButton).%New()
-		s herm.text = "Hermaphrodite"
-		s herm."callback_data" = "herm"
-		
-		s keyboard = ##class(Telegram.DTO.Objects.InlineKeyboardMarkup).%New()
-		s keyboard."inline_keyboard" = [[male, female],[herm]]
-		
-		s replyMarkup = keyboard
-		
-		do api.SendMessage(user.ChatId, "Your gender: ",,,,, replyMarkup)
 	}
 ]]></Implementation>
 </Method>

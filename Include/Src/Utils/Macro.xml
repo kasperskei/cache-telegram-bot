@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Routine name="Src.Utils.Macro" type="INC"><![CDATA[
+/// Выполняет %expr и бросает исключение, если результат не 1
+#Define do(%expr) do ##class(Src.Utils.Auxilliary).ThrowIfError(%expr)
+
+/// Бросает исключение с заданным текстом
+#Define throw(%text) do ##class(Src.Utils.Auxilliary).ThrowString(%text)
+
+/// Проверяет, является ли строка substring префиксом строки string
+#Define isPrefix(%string, %substring) ##class(Src.Utils.Auxilliary).IsPrefix(%string, %substring)
+
+/// Удаляет префикс prefix из строки string.
+/// Если строка не содержит префикс, то бросает исключение.
+#Define deletePrefix(%string, %prefix) ##class(Src.Utils.Auxilliary).DeletePrefix(%string, %prefix)
+
+]]></Routine>
+</Export>

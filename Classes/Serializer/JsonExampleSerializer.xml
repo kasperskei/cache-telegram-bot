@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:22">
+<Export generator="Cache" version="25">
 <Class name="Serializer.JsonExampleSerializer">
 <Super>Serializer.AbstractSerializer</Super>
-<TimeChanged>64132,42260</TimeChanged>
 <TimeCreated>64127,51874.197164</TimeCreated>
 
 <Method name="InternalSerializeArray">
-<FormalSpec>object:%Array,stream:%Stream.Object</FormalSpec>
+<FormalSpec>object:%DynamicArray,stream:%Stream.Object</FormalSpec>
 <Implementation><![CDATA[
 	$$$do(stream.Write("["))
-	set iterator = object.$getIterator()
+	set iterator = object.%GetIterator()
 	set isFirst = $$$YES
-	while(iterator.$getNext(.key,.val)){
+	while(iterator.%GetNext(.key,.val)){
 		if ('isFirst) {
 			$$$do(stream.Write(","))
 		}

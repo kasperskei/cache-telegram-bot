@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:06:31">
+<Export generator="Cache" version="25">
 <Class name="Src.Utils.SourceControl">
 <ClassType/>
 <IncludeCode>Src.Utils.Macro</IncludeCode>
 <ProcedureBlock>1</ProcedureBlock>
 <Super>%Studio.SourceControl.Base</Super>
-<TimeChanged>64113,36823.00256</TimeChanged>
 <TimeCreated>59078,62120</TimeCreated>
 
 <Parameter name="SETTINGS">

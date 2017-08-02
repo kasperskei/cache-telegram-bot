@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:37">
+<Export generator="Cache" version="25">
 <Class name="Serializer.TomlParser">
 <Description><![CDATA[
 <h1>TOML parser</h1>
@@ -7,7 +7,6 @@
 I ported TOML decoding/encoding 
 <a href=https://github.com/alexcrichton/toml-rs>library for Rust</a>.</p>]]></Description>
 <Super>%RegisteredObject</Super>
-<TimeChanged>64132,42263</TimeChanged>
 <TimeCreated>63623,75447.929822</TimeCreated>
 
 <Property name="stream">
