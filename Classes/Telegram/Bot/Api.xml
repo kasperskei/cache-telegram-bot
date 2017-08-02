@@ -17,7 +17,8 @@ Sends a web request to API Telegram</Description>
 	set request.Server = "api.telegram.org"
 	set request.Https = $$$YES
 	set request.SSLConfiguration = ##class(Telegram.Bot.Settings).GetValue("ssl")
-	set request.Location = "bot"_##class(Telegram.Bot.Settings).GetValue("token")
+		set request.Location = "bot" _ ##class(Telegram.Bot.Settings).GetValue("token")
+	
 	
 	/// The content of the request data
 	set RootMIMEPart = requestData.GenerateMultiformData()

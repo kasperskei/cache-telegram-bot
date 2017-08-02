@@ -17,7 +17,7 @@
 <Property name="photo">
 <Description>
 %Array Of Telegram.DTO.Objects.PhotoSize</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 <Required>1</Required>
 </Property>
 
@@ -28,7 +28,7 @@
 <Property name="text_entities">
 <Description>
 %Array Of Telegram.DTO.Objects.MessageEntity</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 </Property>
 
 <Property name="animation">

@@ -12,7 +12,7 @@
 <Property name="photos">
 <Description>
 %Array Of %Array PhotoSize</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 <Required>1</Required>
 </Property>
 </Class>
