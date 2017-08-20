@@ -11,13 +11,17 @@ Sends a web request to API Telegram</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>method:%String,requestData:Telegram.DTO.Request.BaseRequest,type:%String</FormalSpec>
 <Implementation><![CDATA[
+	set settings = ##class(Telegram.Bot.Settings).%New()
+	
+	/// Configuration request
 	set request = ##class(%Net.HttpRequest).%New()
 	set request.ContentType = "multipart/form-data; boundary="
 	set request.Server = "api.telegram.org"
 	set request.Https = $$$YES
-	set request.SSLConfiguration = ##class(Telegram.Bot.Settings).GetValue("ssl")
-	set request.Location = ##class(Telegram.Bot.Settings).GetValue("token")
+	set request.SSLConfiguration = settings.GetValue("ssl")
+	set request.Location = "bot"_settings.GetValue("token")
 	
+	/// The content of the request data
 	set RootMIMEPart = requestData.GenerateMultiformData()
 	if RootMIMEPart.Parts.Count() '= 0 {
 		set writer = ##class(%Net.MIMEWriter).%New()
@@ -26,17 +30,21 @@ Sends a web request to API Telegram</Description>
 		set request.ContentType = "multipart/form-data; boundary="_RootMIMEPart.Boundary
 	}
 	
-	do request.Get(request.Location_"/"_method, 0)
-	do request.HttpResponse.OutputToDevice()
+	/// Send request
+	do request.Get(request.Location_"/"_method)
+	if (settings.GetValue("debug")) {
+		do request.HttpResponse.OutputToDevice()
+	}
 	
+	/// Deserialize the response
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()
 	set response = deserializer.Deserialize(request.HttpResponse.Data)
  
 	if (response.ok) {
-		if ($ClassName(response.result) = "%Library.Array") && (type '= "") {
+		if ($ClassName(response.result) = "%Library.DynamicArray") && (type '= "") {
 			set result = ##class(%ListOfObjects).%New()
-			set iter = response.result.$getIterator()
-	   		while iter.$getNext(.key , .value) {
+			set iter = response.result.%GetIterator()
+	   		while iter.%GetNext(.key , .value) {
 		   		do result.Insert(value.Convert(type))
 	   		}
 	   		return result
@@ -53,11 +61,11 @@ Sends a web request to API Telegram</Description>
 		set exception.Data = requestData
 		set exception.Description = response.description
 		set exception.Code = response."error_code"
-		if $IsObject(exception.parameters) {
-			set exception.Parameters = response.parameters.Convert("Telegram.DTO.Objects.ResponseParameters")
-		}
+		//if $IsObject(exception.parameters) {
+		//	set exception.Parameters = response.parameters.Convert("Telegram.DTO.Objects.ResponseParameters")
+		//}
 		
-		throw exception
+		return exception
 	}
 ]]></Implementation>
 </Method>
@@ -66,23 +74,22 @@ Sends a web request to API Telegram</Description>
 <Description>
 Specifies the type of updates and call the appropriate handler method</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>handler:Telegram.Bot.AbstractHandler,update:Telegram.DTO.Objects.Update</FormalSpec>
+<FormalSpec>classname:%String,update:Telegram.DTO.Objects.Update</FormalSpec>
 <Implementation><![CDATA[
-	
 	if $IsObject(update.message) {
-		do handler.OnMessage(update.message)
+		do $classmethod(classname, "OnMessage", update.message)
 	}
 	if $IsObject(update."edited_message") {
-		do handler.OnEditedMessage(update."edited_message")
+		do $classmethod(classname, "OnEditedMessage", update."edited_message")
 	}
 	if $IsObject(update."inline_query") {
-		do handler.OnInlineQuery(update."inline_query")
+		do $classmethod(classname, "OnInlineQuery", update."inline_query")
 	}
 	if $IsObject(update."chosen_inline_result") {
-		do handler.OnChosenInlineResult(update."chosen_inline_result")
+		do $classmethod(classname, "OnChosenInlineResult", update."chosen_inline_result")
 	}
 	if $IsObject(update."callback_query") {
-		do handler.OnCallbackQuery(update."callback_query")
+		do $classmethod(classname, "OnCallbackQuery", update."callback_query")
 	}
 ]]></Implementation>
 </Method>
@@ -91,21 +98,32 @@ Specifies the type of updates and call the appropriate handler method</Descripti
 <Description>
 Sends requests to receive updates from API Telegram</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>handler:Telegram.Bot.AbstractHandler</FormalSpec>
+<FormalSpec>classname:%String</FormalSpec>
 <Implementation><![CDATA[
-	set settings = ##class(Telegram.Bot.Settings).%New()
-	set request = ##class(Telegram.Bot.Api).%New()
-	
-	while settings.GetValue("local") {
-		set response = request.GetUpdates(settings.GetValue("last") + 1)
+	try {
+		lock +^Telegram.Bot.Lock:2
+    	if ($TEST = 0) {
+    		$$$throw("Failed to create a thread")
+    	}
+    	      
+		set settings = ##class(Telegram.Bot.Settings).%New()
+		set request = ##class(Telegram.Bot.Api).%New()
+		
+		while settings.GetValue("local") {
+			set response = request.GetUpdates(settings.GetValue("last") + 1)
 
-		for i = 1:1:response.Count() {
-			set update = response.GetAt(i)
-			job ..ProcessUpdate(handler, update)			
-			do settings.SetValue("last", update."update_id")
+			for i = 1:1:response.Count() {
+				set update = response.GetAt(i)
+				do ..ProcessUpdate(classname, update)			
+				do settings.SetValue("last", update."update_id")
+			}
+			
+			HANG settings.GetValue("interval")
 		}
 		
-		HANG settings.GetValue("interval")
+		do ..DeleteLocalhook()
+	} catch(ex) {
+		do ..DeleteLocalhook()
 	}
 ]]></Implementation>
 </Method>
@@ -114,11 +132,19 @@ Sends requests to receive updates from API Telegram</Description>
 <Description>
 Use this method to the incoming get updates, referring to the telegram's API, with the specified interval.</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>handler:Telegram.Bot.AbstractHandler</FormalSpec>
+<FormalSpec>classname:%String</FormalSpec>
 <Implementation><![CDATA[
 	do ##class(Telegram.Bot.Settings).SetValue("local", $$$YES)
-	do ..DeleteWebhook()	
-	job ..ThreadLocalhook(handler)
+	do ..DeleteWebhook()
+
+	lock +^Telegram.Bot.Lock:0
+    if $TEST {
+      job ..ThreadLocalhook(classname)
+      lock -^Telegram.Bot.Lock
+    }
+    else {
+      $$$throw("Thread already created")
+    }
 ]]></Implementation>
 </Method>
 
@@ -126,7 +152,9 @@ Use this method to the incoming get updates, referring to the telegram's API, wi
 <Description>
 Use this method to stop SetLocalhook()</Description>
 <ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	do ##class(Telegram.Bot.Settings).SetValue("local", $$$NO)
+<Implementation><![CDATA[
+	lock -^Telegram.Bot.Lock
+	do ##class(Telegram.Bot.Settings).SetValue("local", $$$NO)
 ]]></Implementation>
 </Method>
 

@@ -9,7 +9,7 @@ This object represents a custom keyboard with reply options (see Introduction to
 <Property name="keyboard">
 <Description>
 %Array of %Array KeyboardButton</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 <Required>1</Required>
 </Property>
 

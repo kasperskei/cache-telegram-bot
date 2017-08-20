@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:17">
+<Export generator="Cache" version="25">
 <Class name="Serializer.JsonDeserializer">
 <Super>Serializer.AbstractDeserializer</Super>
-<TimeChanged>64132,69155.413525</TimeChanged>
 <TimeCreated>64128,345.751689</TimeCreated>
 
 <Method name="InternalDeserialize">
 <FormalSpec>stream:%Stream.Object,classname:%String</FormalSpec>
 <Implementation><![CDATA[
 	if ($classmethod(classname, "%IsA", "Serializer.Serializable.Object")){
-		return ..ConvertVal(##class(%Object).$fromJSON(stream)).Convert(classname)
+		return ..ConvertVal(##class(%DynamicObject).%FromJSON(stream)).Convert(classname)
 	}
-	elseif ($classmethod(classname, "%IsA", "%Array")){
-		return ..ConvertVal(##class(%Array).$fromJSON(stream))
+	elseif ($classmethod(classname, "%IsA", "%DynamicArray")){
+		return ..ConvertVal(##class(%DynamicArray).%FromJSON(stream))
 	}
 	else{
 		$$$throw("Expected serializable object, got '"_classname_"'")
@@ -21,12 +20,12 @@
 </Method>
 
 <Method name="ConvertObject">
-<FormalSpec>source:%Object</FormalSpec>
+<FormalSpec>source:%DynamicObject</FormalSpec>
 <ReturnType>Serializer.Serializable.Object</ReturnType>
 <Implementation><![CDATA[
 	set dest = ##class(Serializer.Serializable.Object).%New()
-	set iterator = source.$getIterator()
-	while(iterator.$getNext(.key, .val)){
+	set iterator = source.%GetIterator()
+	while(iterator.%GetNext(.key, .val)){
 		set $property(dest, key) = ..ConvertVal(val)
 	}
 	return dest
@@ -34,12 +33,12 @@
 </Method>
 
 <Method name="ConvertArray">
-<FormalSpec>source:%Array</FormalSpec>
-<ReturnType>%Array</ReturnType>
+<FormalSpec>source:%DynamicArray</FormalSpec>
+<ReturnType>%DynamicArray</ReturnType>
 <Implementation><![CDATA[
-	set dest = ##class(%Array).%New()
-	set iterator = source.$getIterator()
-	while(iterator.$getNext(.key, .val)){
+	set dest = ##class(%DynamicArray).%New()
+	set iterator = source.%GetIterator()
+	while(iterator.%GetNext(.key, .val)){
 		set $property(dest, key) = ..ConvertVal(val)
 	}
 	return dest
@@ -52,10 +51,10 @@
 	if ('$isobject(val)){
 		return val
 	}
-	elseif(val.%IsA("%Object")){
+	elseif(val.%IsA("%DynamicObject")){
 		return ..ConvertObject(val)
 	}
-	elseif(val.%IsA("%Array")){
+	elseif(val.%IsA("%DynamicArray")){
 		return ..ConvertArray(val)
 	}
 	else{

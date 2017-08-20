@@ -7,7 +7,7 @@
 <Property name="inline_keyboard">
 <Description>
 %Array of %Array InlineKeyboardButton</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 <Required>1</Required>
 </Property>
 </Class>

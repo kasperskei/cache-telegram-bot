@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:08:02">
+<Export generator="Cache" version="25">
 <Class name="Serializer.Serializable.StaticPropertyIterator">
 <Super>%RegisteredObject</Super>
-<TimeChanged>64132,42289</TimeChanged>
 <TimeCreated>64127,57024.138793</TimeCreated>
 
 <Property name="curPos">

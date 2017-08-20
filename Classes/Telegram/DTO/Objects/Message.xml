@@ -50,7 +50,7 @@
 <Property name="entities">
 <Description>
 %Array Of Telegram.DTO.Objects.MessageEntity</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 </Property>
 
 <Property name="audio">
@@ -68,7 +68,7 @@
 <Property name="photo">
 <Description>
 %Array Of Telegram.DTO.Objects.PhotoSize</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 </Property>
 
 <Property name="sticker">
@@ -114,7 +114,7 @@
 <Property name="new_chat_photo">
 <Description>
 %Array Of Telegram.DTO.Objects.PhotoSize</Description>
-<Type>%Array</Type>
+<Type>%DynamicArray</Type>
 </Property>
 
 <Property name="delete_chat_photo">

@@ -24,7 +24,7 @@
 	set deserializer = ##class(Serializer.JsonDeserializer).%New()	
 	set response = deserializer.Deserialize(%request.Content)
 	set update = response.Convert("Telegram.DTO.Objects.Update")	
-	set handler = ..GetHandlerFactory()
+	set handler = ..GetHandler()
 	
 	job ##class(Telegram.Bot.Api).ProcessUpdate(handler, update)
 	do settings.SetValue("last", update."update_id")

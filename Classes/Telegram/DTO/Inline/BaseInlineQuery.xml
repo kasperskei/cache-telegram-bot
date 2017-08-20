@@ -19,7 +19,7 @@
 </Property>
 
 <Property name="input_message_content">
-<Type>%Object</Type>
+<Type>%DynamicObject</Type>
 </Property>
 </Class>
 </Export>

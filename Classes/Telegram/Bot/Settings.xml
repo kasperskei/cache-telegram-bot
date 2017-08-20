@@ -103,6 +103,15 @@ Connection settings to the Telegram Bot Api</Description>
 			set setting.Value = 1
 			do setting.%Save()
 		}
+		
+		set setting = ##class(Telegram.Bot.Settings).CodeIndexOpen("debug")
+		if setting = "" {
+			set setting = ##class(Telegram.Bot.Settings).%New()
+			set setting.Code = "debug"
+			set setting.Name = "The output information in the console"
+			set setting.Value = 0
+			do setting.%Save()
+		}
 	
 		return $$$OK
 	} catch ex {

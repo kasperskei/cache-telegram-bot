@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2016.1.1 (Build 107U)" ts="2016-08-20 02:07:30">
+<Export generator="Cache" version="25">
 <Class name="Serializer.ProtoBufMetadataProvider">
 <IncludeCode>Src.Utils.Macro</IncludeCode>
 <Super>%RegisteredObject</Super>
-<TimeChanged>64132,42261</TimeChanged>
 <TimeCreated>64127,69529.442441</TimeCreated>
 
 <Property name="PropToTag">
