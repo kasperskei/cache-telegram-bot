@@ -65,7 +65,7 @@ Sends a web request to API Telegram</Description>
 		//	set exception.Parameters = response.parameters.Convert("Telegram.DTO.Objects.ResponseParameters")
 		//}
 		
-		return exception
+		throw exception
 	}
 ]]></Implementation>
 </Method>
@@ -103,7 +103,7 @@ Sends requests to receive updates from API Telegram</Description>
 	try {
 		lock +^Telegram.Bot.Lock:2
     	if ($TEST = 0) {
-    		$$$throw("Failed to create a thread")
+    		$$$throw("Running another thread")
     	}
     	      
 		set settings = ##class(Telegram.Bot.Settings).%New()
@@ -121,8 +121,10 @@ Sends requests to receive updates from API Telegram</Description>
 			HANG settings.GetValue("interval")
 		}
 		
+		lock -^Telegram.Bot.Lock
 		do ..DeleteLocalhook()
 	} catch(ex) {
+		lock -^Telegram.Bot.Lock
 		do ..DeleteLocalhook()
 	}
 ]]></Implementation>
@@ -138,9 +140,9 @@ Use this method to the incoming get updates, referring to the telegram's API, wi
 	do ..DeleteWebhook()
 
 	lock +^Telegram.Bot.Lock:0
-    if $TEST {
+    if ($TEST) {
+	  lock -^Telegram.Bot.Lock
       job ..ThreadLocalhook(classname)
-      lock -^Telegram.Bot.Lock
     }
     else {
       $$$throw("Thread already created")
@@ -152,9 +154,7 @@ Use this method to the incoming get updates, referring to the telegram's API, wi
 <Description>
 Use this method to stop SetLocalhook()</Description>
 <ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[
-	lock -^Telegram.Bot.Lock
-	do ##class(Telegram.Bot.Settings).SetValue("local", $$$NO)
+<Implementation><![CDATA[	do ##class(Telegram.Bot.Settings).SetValue("local", $$$NO)
 ]]></Implementation>
 </Method>
 
