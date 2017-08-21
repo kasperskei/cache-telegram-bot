@@ -8,35 +8,38 @@
 <ClassMethod>1</ClassMethod>
 <FormalSpec>message:Telegram.DTO.Objects.Message</FormalSpec>
 <Implementation><![CDATA[
-	set api = ##class(Telegram.Bot.Api).%New()
-	set user = ##class(Telegram.Examples.MyUserData).GetUser(message.chat.id)
-	
-	if user.Name = "" {
-		set user.Name = message.chat."first_name"
-		do user.%Save()
-	}
-	
-	if $zcvt($piece(message.text, " ", 1), "L") = "/start" {
-		do api.SendMessage(user.ChatId, "<i>Text</i> of <b>Message</b>", "HTML")
-		HANG 2
+	try {
+		set api = ##class(Telegram.Bot.Api).%New()
+		set user = ##class(Telegram.Examples.MyUserData).GetUser(message.chat.id)
 		
-		do api.SendSticker(user.ChatId, "BQADAgADYAEAAmMr4gmuJ-7ZcY8iEwI")		
-		HANG 2
+		if user.Name = "" {
+			set user.Name = message.chat."first_name"
+			do user.%Save()
+		}
 		
-		do api.ForwardMessage(user.ChatId, user.ChatId, , message."message_id")
-		HANG 2
-		
-		do api.SendChatAction(user.ChatId, "upload_photo")
-		
-		set photoId = "AgADAgAD5qcxG6lDfgepYjDY6Do-Ey4zcQ0ABCMbdW_PkDfCNLABAAEC"
-		do api.SendPhoto(user.ChatId, photoId, "Caption")
-		HANG 2
-		
-		//set stream = ##class(%FileBinaryStream).%New()
-		//set stream.Filename = "Path to photo: C:\document.doc"
-		//do api.SendDocument(user.ChatId, stream, "Caption")
-		
-		do api.SendLocation(user.ChatId, 56.01839, 92.86717)
+		if $zcvt($piece(message.text, " ", 1), "L") = "/start" {
+			do api.SendMessage(user.ChatId, "<i>Text</i> of <b>Message</b>", "HTML")
+			HANG 2
+			
+			do api.SendSticker(user.ChatId, "BQADAgADYAEAAmMr4gmuJ-7ZcY8iEwI")		
+			HANG 2
+			
+			do api.ForwardMessage(user.ChatId, user.ChatId, , message."message_id")
+			HANG 2
+			
+			do api.SendChatAction(user.ChatId, "upload_photo")
+			
+			set photoId = "AgADAgAD5qcxG6lDfgepYjDY6Do-Ey4zcQ0ABCMbdW_PkDfCNLABAAEC"
+			do api.SendPhoto(user.ChatId, photoId, "Caption")
+			HANG 2
+			
+			//set stream = ##class(%FileBinaryStream).%New()
+			//set stream.Filename = "Path to photo: C:\document.doc"
+			//do api.SendDocument(user.ChatId, stream, "Caption")
+			
+			do api.SendLocation(user.ChatId, 56.01839, 92.86717)
+		}
+	} catch (ex) {
 	}
 ]]></Implementation>
 </Method>
