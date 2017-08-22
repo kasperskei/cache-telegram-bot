@@ -141,11 +141,11 @@ Use this method to the incoming get updates, referring to the telegram's API, wi
 
 	lock +^Telegram.Bot.Lock:0
     if ($TEST) {
-	  lock -^Telegram.Bot.Lock
-      job ..ThreadLocalhook(classname)
+    	job ..ThreadLocalhook(classname)
+    	lock -^Telegram.Bot.Lock
     }
     else {
-      $$$throw("Thread already created")
+	    $$$throw("Thread already created")
     }
 ]]></Implementation>
 </Method>
